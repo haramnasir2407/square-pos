@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
-import { useProductList } from "@/shared/hooks/useProductList";
-import { useInventoryData } from "@/shared/hooks/useInventoryData";
 import { useDiscounts } from "@/shared/hooks/useDiscounts";
+import { useInventoryData } from "@/shared/hooks/useInventoryData";
 import { usePricingRules } from "@/shared/hooks/usePricingRules";
+import { useProductList } from "@/shared/hooks/useProductList";
 import { useProductSets } from "@/shared/hooks/useProductSets";
+import { useMemo, useState } from "react";
 import {
   extractCategories,
   extractDiscounts,
@@ -24,45 +24,17 @@ import {
   transformTaxes,
 } from "../utils/productDataTransformers";
 
+import type {
+  UseProductSectionDataProps,
+  UseProductSectionDataReturn,
+  paramsType,
+} from "@/shared/types/catalog";
+import { createDiscountApplications } from "@/shared/utils/discount/discountApplicationUtils";
+import { buildImageMap } from "@/shared/utils/image/imageUtils";
 import {
   buildCartInventoryInfo,
   buildInventoryMap,
 } from "../utils/inventory/inventoryUtils";
-import { buildImageMap } from "@/shared/utils/image/imageUtils";
-import { createDiscountApplications } from "@/shared/utils/discount/discountApplicationUtils";
-import {
-  Product,
-  ProductCatalog,
-  Inventory,
-  InventoryMap,
-  ImageMap,
-  DiscountApplication,
-  TransformedTax,
-} from "@/shared/types/product";
-
-export type UseProductSectionDataProps = {
-  accessToken: string;
-  products?: ProductCatalog;
-  inventory?: Inventory;
-};
-
-export type UseProductSectionDataReturn = {
-  params: { types: string; query?: string };
-  setParams: React.Dispatch<
-    React.SetStateAction<{ types: string; query?: string }>
-  >;
-  isPending: boolean;
-  error: unknown;
-  items: Product[];
-  taxes_data: TransformedTax[];
-  discounts_data: any;
-  cartInventoryInfo: any;
-  inventoryMap: InventoryMap;
-  imageMap: ImageMap;
-  variationIds: string[];
-  categoryObjects: any;
-  discountApplications: DiscountApplication[];
-};
 
 /**
  * Custom hook to manage and aggregate all product section data for the dashboard.
@@ -75,10 +47,7 @@ export function useProductSectionData({
   inventory,
 }: UseProductSectionDataProps): UseProductSectionDataReturn {
   // * set params for fetching products
-  const [params, setParams] = useState<{
-    types: string;
-    query?: string;
-  }>({
+  const [params, setParams] = useState<paramsType>({
     types: "item, image, category, tax, discount, pricing_rule, product_set",
   });
 
@@ -92,8 +61,6 @@ export function useProductSectionData({
   const { discounts: fetchedDiscounts } = useDiscounts(
     params.query ? accessToken : ""
   );
-  // console.log(fetchedDiscounts)
-  // console.log(fetchedDiscounts.length);
 
   // * custom hook for fetching pricing rules - only run when there's a query
   const { pricingRules: fetchedPricingRules } = usePricingRules(
@@ -112,9 +79,7 @@ export function useProductSectionData({
       return data;
     }
     return products;
-  }, [data, products]);
-
-  // console.log(productData);
+  }, [data, products, params.query]);
 
   // * get the items
   const items = extractItems(productData);
@@ -194,12 +159,12 @@ export function useProductSectionData({
     error,
     items,
     taxes_data,
-    discounts_data,
     cartInventoryInfo,
     inventoryMap,
     imageMap,
     variationIds,
-    categoryObjects,
     discountApplications,
+    categoryObjects,
+    catalogObjects: productData?.objects ?? [],
   };
 }

@@ -36,7 +36,7 @@ export default function SignInPageUI({
   }
 
   return (
-    <Flex
+    <div
       className={css({
         minHeight: "100vh",
         display: "flex",
@@ -109,6 +109,6 @@ export default function SignInPageUI({
           </div>
         </div>
       </div>
-    </Flex>
+    </div>
   );
 }

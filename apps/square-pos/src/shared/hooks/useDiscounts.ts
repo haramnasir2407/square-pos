@@ -1,4 +1,4 @@
-import { Discount, UseDiscountsReturn } from "@/shared/types/product";
+import type { Discount, UseDiscountsReturn } from "@/shared/types/catalog";
 import { useEffect, useState } from "react";
 
 export function useDiscounts(accessToken: string): UseDiscountsReturn {
@@ -35,9 +35,13 @@ export function useDiscounts(accessToken: string): UseDiscountsReturn {
 
         const data = await response.json();
         setDiscounts(data.objects || []);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Failed to fetch discounts:", err);
-        setError(err.message || "Failed to fetch discounts");
+        setError(
+          err && typeof err === "object" && "message" in err
+            ? (err as { message?: string }).message || "Failed to fetch discounts"
+            : "Failed to fetch discounts"
+        );
       } finally {
         setIsLoading(false);
       }

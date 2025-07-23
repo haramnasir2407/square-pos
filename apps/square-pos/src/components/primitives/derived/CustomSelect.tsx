@@ -16,6 +16,7 @@ import { css, cx } from "~/styled-system/css";
  * @property {string} className - Additional CSS classes.
  */
 type CustomSelectProps = {
+  id: string;
   value: string;
   onChange: (value: string) => void;
   options: Array<{ value: string; label: string }>;
@@ -30,6 +31,7 @@ type CustomSelectProps = {
  * Features smooth animations, keyboard navigation, and accessibility support.
  */
 export default function CustomSelect({
+  id,
   value,
   onChange,
   options,

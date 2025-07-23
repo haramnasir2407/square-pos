@@ -1699,6 +1699,26 @@ const tokens = {
     "value": "1536px",
     "variable": "var(--breakpoints-2xl)"
   },
+  "colors.bg.default": {
+    "value": "var(--colors-white)",
+    "variable": "var(--colors-bg-default)"
+  },
+  "colors.bg.muted": {
+    "value": "var(--colors-gray-50)",
+    "variable": "var(--colors-bg-muted)"
+  },
+  "colors.text.primary": {
+    "value": "var(--colors-gray-900)",
+    "variable": "var(--colors-text-primary)"
+  },
+  "colors.text.secondary": {
+    "value": "var(--colors-gray-600)",
+    "variable": "var(--colors-text-secondary)"
+  },
+  "colors.border.default": {
+    "value": "var(--colors-gray-200)",
+    "variable": "var(--colors-border-default)"
+  },
   "spacing.-1": {
     "value": "calc(var(--spacing-1) * -1)",
     "variable": "var(--spacing-1)"
@@ -1878,6 +1898,22 @@ const tokens = {
   "colors.colorPalette.950": {
     "value": "var(--colors-color-palette-950)",
     "variable": "var(--colors-color-palette-950)"
+  },
+  "colors.colorPalette.default": {
+    "value": "var(--colors-color-palette-default)",
+    "variable": "var(--colors-color-palette-default)"
+  },
+  "colors.colorPalette.muted": {
+    "value": "var(--colors-color-palette-muted)",
+    "variable": "var(--colors-color-palette-muted)"
+  },
+  "colors.colorPalette.primary": {
+    "value": "var(--colors-color-palette-primary)",
+    "variable": "var(--colors-color-palette-primary)"
+  },
+  "colors.colorPalette.secondary": {
+    "value": "var(--colors-color-palette-secondary)",
+    "variable": "var(--colors-color-palette-secondary)"
   }
 }
 

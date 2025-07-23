@@ -1,55 +1,57 @@
-import {
+import type {
+  Category,
   CategoryObject,
   Discount,
-  DiscountData,
   PricingRule,
-  PricingRuleData,
   ProductSet,
-  ProductSetData,
   Tax,
-  TaxData,
-} from "@/shared/types/product";
+  TransformedDiscount,
+  TransformedPricingRule,
+  TransformedProductSet,
+  TransformedTax,
+} from "@/shared/types/catalog";
 
 // Types for data transformation
 
 /**
  * Transforms raw tax objects into structured tax data
  */
-export function transformTaxes(taxes: Tax[]): TaxData[] {
-  return taxes.map((tax: any) => ({
+export function transformTaxes(taxes: Tax[]): TransformedTax[] {
+  return taxes.map((tax) => ({
     id: tax.id,
     name: tax.tax_data.name,
-    percentage: parseFloat(tax.tax_data.percentage),
+    percentage: Number.parseFloat(tax.tax_data.percentage),
     enabled: tax.tax_data.enabled,
   }));
 }
-
 /**
  * Transforms raw discount objects into structured discount data
  */
-export function transformDiscounts(discounts: Discount[]): DiscountData[] {
-  return discounts.map((discount: any) => {
+export function transformDiscounts(
+  discounts: Discount[]
+): TransformedDiscount[] {
+  return discounts.map((discount) => {
     const { id, discount_data } = discount;
     const base = {
       id,
       name: discount_data.name,
       type: discount_data.discount_type,
-      modify_tax_basis: "MODIFY_TAX_BASIS",
+      modify_tax_basis: discount_data.modify_tax_basis,
     };
 
     if (discount_data.percentage !== undefined) {
       return {
         ...base,
-        percentage: parseFloat(discount_data.percentage),
+        percentage: Number.parseFloat(discount_data.percentage),
       };
-    } else if (discount_data.amount_money?.amount !== undefined) {
+    }
+    if (discount_data.amount_money?.amount !== undefined) {
       return {
         ...base,
         amount: discount_data.amount_money.amount,
       };
-    } else {
-      return base;
     }
+    return base;
   });
 }
 
@@ -58,8 +60,8 @@ export function transformDiscounts(discounts: Discount[]): DiscountData[] {
  */
 export function transformPricingRules(
   pricingRules: PricingRule[]
-): PricingRuleData[] {
-  return pricingRules.map((pricing_rule: any) => ({
+): TransformedPricingRule[] {
+  return pricingRules.map((pricing_rule) => ({
     id: pricing_rule.id,
     discount_id: pricing_rule.pricing_rule_data.discount_id,
     match_products_id: pricing_rule.pricing_rule_data.match_products_id,
@@ -71,8 +73,8 @@ export function transformPricingRules(
  */
 export function transformProductSets(
   productSets: ProductSet[]
-): ProductSetData[] {
-  return productSets.map((product_set: any) => ({
+): TransformedProductSet[] {
+  return productSets.map((product_set) => ({
     id: product_set.id,
     all_products: product_set.product_set_data.all_products || false,
     product_ids_all: product_set.product_set_data.product_ids_all || undefined,
@@ -83,8 +85,8 @@ export function transformProductSets(
 /**
  * Transforms raw category objects into structured category data
  */
-export function transformCategories(categories: any[]): CategoryObject[] {
-  return categories.map((category: any) => ({
+export function transformCategories(categories: Category[]): CategoryObject[] {
+  return categories.map((category) => ({
     id: category.id,
     name: category.category_data?.name,
   }));
@@ -93,7 +95,9 @@ export function transformCategories(categories: any[]): CategoryObject[] {
 /**
  * Creates a map from discount IDs to product set IDs
  */
-export function createDiscountToProductSetMap(pricingRules: PricingRuleData[]) {
+export function createDiscountToProductSetMap(
+  pricingRules: TransformedPricingRule[]
+) {
   return pricingRules.map((rule) => ({
     discount_id: rule.discount_id,
     product_set_id: rule.match_products_id,

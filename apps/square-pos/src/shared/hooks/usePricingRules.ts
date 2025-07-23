@@ -1,4 +1,7 @@
-import { PricingRule, UsePricingRulesReturn } from "@/shared/types/product";
+import type {
+  PricingRule,
+  UsePricingRulesReturn,
+} from "@/shared/types/catalog";
 import { useEffect, useState } from "react";
 
 export function usePricingRules(accessToken: string): UsePricingRulesReturn {
@@ -35,9 +38,10 @@ export function usePricingRules(accessToken: string): UsePricingRulesReturn {
 
         const data = await response.json();
         setPricingRules(data.objects || []);
-      } catch (err: any) {
-        console.error("Failed to fetch pricing rules:", err);
-        setError(err.message || "Failed to fetch pricing rules");
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        console.error("Failed to fetch pricing rules:", error);
+        setError(error.message || "Failed to fetch pricing rules");
       } finally {
         setIsLoading(false);
       }

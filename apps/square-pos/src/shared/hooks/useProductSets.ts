@@ -1,4 +1,4 @@
-import { ProductSet, UseProductSetsReturn } from "@/shared/types/product";
+import type { ProductSet, UseProductSetsReturn } from "@/shared/types/catalog";
 import { useEffect, useState } from "react";
 
 export function useProductSets(accessToken: string): UseProductSetsReturn {
@@ -35,9 +35,10 @@ export function useProductSets(accessToken: string): UseProductSetsReturn {
 
         const data = await response.json();
         setProductSets(data.objects || []);
-      } catch (err: any) {
-        console.error("Failed to fetch product sets:", err);
-        setError(err.message || "Failed to fetch product sets");
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        console.error("Failed to fetch product sets:", error);
+        setError(error.message || "Failed to fetch product sets");
       } finally {
         setIsLoading(false);
       }

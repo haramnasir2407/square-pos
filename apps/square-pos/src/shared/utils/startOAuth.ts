@@ -2,7 +2,7 @@
 
 export const startSquareOAuth = () => {
   const clientId = process.env.NEXT_PUBLIC_SQUARE_CLIENT_ID ?? "";
-  const redirectUri = "http://localhost:3000/auth/signin";
+  const redirectUri = "http://localhost:3000/signin";
 
   const authUrl = new URL(
     "https://connect.squareupsandbox.com/oauth2/authorize"

@@ -3,10 +3,9 @@
 // the params object is an object with the query parameters
 // the function returns the data from the API
 
-export async function fetchProducts(
-  accessToken: string,
-  params?: Record<string, unknown>
-) {
+import type { paramsType } from "../types/catalog";
+
+export async function fetchProducts(accessToken: string, params?: paramsType) {
   if (!accessToken) {
     return null;
   }

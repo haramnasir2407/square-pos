@@ -1,4 +1,4 @@
-import { CategoryObject } from "@/shared/types/product";
+import type { CategoryObject, paramsType } from "@/shared/types/catalog";
 
 /**
  * Toggles a category in the selected list
@@ -62,26 +62,29 @@ export const getCategoryNames = (categories: CategoryObject[]): string[] => {
  */
 export function buildCategoryFilterParams(
   selected: CategoryObject[],
-  prevParams: Record<string, any>
-): Record<string, any> {
+  prevParams: paramsType
+): paramsType {
   if (selected && selected.length > 0) {
     return {
       ...prevParams,
       query: {
-        ...prevParams.query,
+        ...(typeof prevParams.query === "object" && prevParams.query !== null
+          ? prevParams.query
+          : {}),
         set_query: {
           attribute_values: selected.map((category) => category.id),
           attribute_name: "categories",
         },
       },
     };
-  } else {
-    return {
-      types: "item, image, category, tax, discount, pricing_rule, product_set",
-      query: {
-        ...prevParams.query,
-        set_query: undefined,
-      },
-    };
   }
+  return {
+    types: "item, image, category, tax, discount, pricing_rule, product_set",
+    query: {
+      ...(typeof prevParams.query === "object" && prevParams.query !== null
+        ? prevParams.query
+        : {}),
+      set_query: undefined,
+    },
+  };
 }

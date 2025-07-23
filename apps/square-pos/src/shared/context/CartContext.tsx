@@ -1,7 +1,7 @@
 "use client";
-import { createContext, useState, useCallback } from "react";
+import { createContext, useCallback, useState } from "react";
 
-const BOGO_DISCOUNT = 100
+const BOGO_DISCOUNT = 100;
 /**
  * Represents an item in the cart.
  * @property {string} id - Unique identifier for the item.
@@ -14,9 +14,10 @@ const BOGO_DISCOUNT = 100
  * @property {string} [category] - Category of the item.
  * @property {Discount} [itemDiscount] - Applied discount object.
  * @property {string} [variantId] - Variant ID of the item.
- * @property {Array<{discount_name: string, discount_value: string|number|null}>} [discounts] - Discounts available for the item.
- * @property {Array<{name: string, percentage: string|number|null}>} [taxes] - Taxes available for the item.
+ * @property {Discount[]} [discounts] - Discounts available for the item.
+ * @property {TaxRate[]} [taxes] - Taxes available for the item.
  */
+
 export type CartItem = {
   id: string;
   name: string;
@@ -28,11 +29,8 @@ export type CartItem = {
   category?: string;
   itemDiscount?: Discount; // * applied discount object
   variantId?: string;
-  discounts?: Array<{
-    discount_name: string;
-    discount_value: string | number | null;
-  }>;
-  taxes?: Array<{ name: string; percentage: string | number | null }>;
+  discounts?: Discount[];
+  taxes?: TaxRate[];
 };
 
 /**
@@ -50,9 +48,10 @@ export type Discount = {
  * @property {string} name - Name of the tax.
  * @property {number} percentage - Tax percentage.
  */
+
 export type TaxRate = {
   name: string;
-  percentage: number;
+  percentage: string | number | null;
 };
 
 /**
@@ -104,7 +103,7 @@ interface CartContextType {
   applyItemDiscount: (itemId: string, discount: Discount) => void;
   removeItemDiscount: (itemId: string) => void;
   toggleItemTax: (itemId: string, enabled: boolean) => void;
-  setItemTaxRate: (itemId: string, taxRate: number) => void;
+  setItemTaxRate: (itemId: string, taxRate: TaxRate) => void;
   getOrderSummary: () => OrderSummary;
   clearCart: () => void;
 }
@@ -232,14 +231,24 @@ export function CartContextProvider({
   }, []);
 
   // * Set tax rate for item
-  const setItemTaxRate = useCallback((itemId: string, taxRate: number) => {
+  const setItemTaxRate = useCallback((itemId: string, taxRate: TaxRate) => {
     setCart((prev) => {
       if (!prev[itemId]) return prev;
+      // Ensure itemTaxRate is a number or undefined
+      const parsed =
+        typeof taxRate.percentage === "number"
+          ? taxRate.percentage
+          : taxRate.percentage
+            ? Number(taxRate.percentage)
+            : undefined;
       return {
         ...prev,
         [itemId]: {
           ...prev[itemId],
-          itemTaxRate: taxRate,
+          itemTaxRate:
+            typeof parsed === "number" && !Number.isNaN(parsed)
+              ? parsed
+              : undefined,
         },
       };
     });
@@ -255,8 +264,8 @@ export function CartContextProvider({
     const appliedTaxRates: TaxRate[] = [];
 
     for (const item of items) {
-      let itemPrice = item.price ?? 0;
-      let itemSubtotal = itemPrice * item.quantity;
+      const itemPrice = item.price ?? 0;
+      const itemSubtotal = itemPrice * item.quantity;
       let itemDiscountValue = 0;
       let itemTaxValue = 0;
 
@@ -318,7 +327,10 @@ export function CartContextProvider({
 }
 
 // * calculates the discounted amount for each item
-function calculateItemDiscountValue(item: CartItem, itemSubtotal: number): number {
+function calculateItemDiscountValue(
+  item: CartItem,
+  itemSubtotal: number
+): number {
   if (!item.itemDiscount) return 0;
   const value = item.itemDiscount.discount_value;
 
@@ -333,8 +345,8 @@ function calculateItemDiscountValue(item: CartItem, itemSubtotal: number): numbe
 
   // Percentage discount
   if (typeof value === "string" && value.includes("%")) {
-    const percent = parseFloat(value);
-    return !isNaN(percent) ? (itemSubtotal * percent) / 100 : 0;
+    const percent = Number.parseFloat(value);
+    return !Number.isNaN(percent) ? (itemSubtotal * percent) / 100 : 0;
   }
 
   // Fixed amount discount (number)
@@ -344,8 +356,8 @@ function calculateItemDiscountValue(item: CartItem, itemSubtotal: number): numbe
 
   // Fixed amount discount (string that parses to number)
   if (typeof value === "string") {
-    const num = parseFloat(value);
-    return !isNaN(num) ? num * item.quantity : 0;
+    const num = Number.parseFloat(value);
+    return !Number.isNaN(num) ? num * item.quantity : 0;
   }
 
   // Default: no discount

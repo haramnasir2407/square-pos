@@ -1,4 +1,5 @@
-import { OrderDiscount, OrderTax } from "../shared/types/order";
+import type { OrderDiscount, OrderTax } from "../types/order";
+
 
 export const ORDER_LEVEL_DISCOUNTS: OrderDiscount[] = [
   {

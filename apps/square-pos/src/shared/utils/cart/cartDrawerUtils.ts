@@ -1,6 +1,7 @@
 // * Utility functions for CartDrawer
 
-import { OrderDiscount, OrderTax } from "@/shared/types/order";
+import type { CartItem } from "@/shared/context/CartContext";
+import type { OrderDiscount, OrderTax } from "@/shared/types/order";
 
 /**
  * Creates the order data object for submission to the backend API.
@@ -14,7 +15,7 @@ export function createOrderData({
   orderDiscounts,
   orderTaxes,
 }: {
-  items: any[];
+  items: CartItem[];
   orderDiscounts?: OrderDiscount[];
   orderTaxes?: OrderTax[];
 }) {
@@ -38,12 +39,18 @@ export function createOrderData({
   const idempotency_key = crypto.randomUUID();
 
   // * build order object
-  const order: any = {
+  const order: {
     pricing_options: {
-      auto_apply_discounts: true,
-      auto_apply_taxes: true,
-    },
-    line_items,
+      auto_apply_discounts: boolean;
+      auto_apply_taxes: boolean;
+    };
+    line_items: { quantity: string; catalog_object_id: string }[];
+    location_id: string;
+    discounts?: OrderDiscount[];
+    taxes?: OrderTax[];
+  } = {
+    pricing_options: { auto_apply_discounts: true, auto_apply_taxes: true },
+    line_items: line_items as { quantity: string; catalog_object_id: string }[],
     location_id: "LQT0VHHSADY7Z",
   };
 
@@ -78,7 +85,7 @@ export function calculateOrderData({
   orderDiscounts,
   orderTaxes,
 }: {
-  items: any[];
+  items: CartItem[];
   orderDiscounts?: OrderDiscount[];
   orderTaxes?: OrderTax[];
 }) {
@@ -102,12 +109,18 @@ export function calculateOrderData({
   const idempotency_key = crypto.randomUUID();
 
   // * build order object
-  const order: any = {
+  const order: {
     pricing_options: {
-      auto_apply_discounts: true,
-      auto_apply_taxes: true,
-    },
-    line_items,
+      auto_apply_discounts: boolean;
+      auto_apply_taxes: boolean;
+    };
+    line_items: { quantity: string; catalog_object_id: string }[];
+    location_id: string;
+    discounts?: OrderDiscount[];
+    taxes?: OrderTax[];
+  } = {
+    pricing_options: { auto_apply_discounts: true, auto_apply_taxes: true },
+    line_items: line_items as { quantity: string; catalog_object_id: string }[],
     location_id: "LQT0VHHSADY7Z",
   };
 
@@ -146,4 +159,3 @@ export function handleItemTaxToggleUtil({
   // * toggle the taxable status of the item
   toggleItemTax(itemId, is_taxable);
 }
-

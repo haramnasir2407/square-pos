@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   const error = searchParams.get("error");
 
-  console.log("Code:", code);
-  console.log("Error:", error);
+  // console.log("Code:", code);
+  // console.log("Error:", error);
 
   if (error) {
     return NextResponse.json({ error }, { status: 400 });
@@ -37,19 +37,19 @@ export async function GET(request: NextRequest) {
           client_secret: process.env.SQUARE_CLIENT_SECRET ?? "",
           code: code,
           grant_type: "authorization_code",
-          redirect_uri: "http://localhost:3000/auth/signin",
+          redirect_uri: "http://localhost:3000/signin",
         }),
       }
     );
 
-    console.log("Token response status:", tokenResponse.status);
-    console.log(
-      "Token response headers:",
-      Object.fromEntries(tokenResponse.headers.entries())
-    );
+    // console.log("Token response status:", tokenResponse.status);
+    // console.log(
+    //   "Token response headers:",
+    //   Object.fromEntries(tokenResponse.headers.entries())
+    // );
 
     const responseText = await tokenResponse.text();
-    console.log("Token response body:", responseText);
+    // console.log("Token response body:", responseText);
 
     if (!tokenResponse.ok) {
       return NextResponse.json(
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    console.log("Merchant response status:", merchantResponse.status);
+    // console.log("Merchant response status:", merchantResponse.status);
 
     if (!merchantResponse.ok) {
       const merchantErrorText = await merchantResponse.text();
@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
     }
 
     const merchantData = await merchantResponse.json();
-    console.log("Merchant data:", merchantData);
+    // console.log("Merchant data:", merchantData);
 
     return NextResponse.json({
       success: true,

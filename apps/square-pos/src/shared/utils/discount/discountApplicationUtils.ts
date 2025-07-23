@@ -1,18 +1,19 @@
-import {
+import type {
   DiscountApplication,
-  DiscountData,
-  ProductSetData,
-} from "@/shared/types/product";
+  TransformedDiscount,
+  TransformedProductSet,
+} from "@/shared/types/catalog";
 
 /**
  * Calculates discount value from discount data
  */
 export function calculateDiscountValue(
-  discount: DiscountData
+  discount: TransformedDiscount
 ): string | number | null {
   if (discount.percentage !== undefined) {
     return `${discount.percentage}%`;
-  } else if (discount.amount !== undefined) {
+  }
+  if (discount.amount !== undefined) {
     return discount.amount;
   }
   return null;
@@ -22,9 +23,9 @@ export function calculateDiscountValue(
  * Determines which product IDs a discount applies to based on product set rules
  */
 export function determineAppliedProductIds(
-  productSet: ProductSetData,
+  productSet: TransformedProductSet,
   allItemIds: string[],
-  productSetsData: ProductSetData[]
+  productSetsData: TransformedProductSet[]
 ): string[] {
   let applied_product_ids: string[] = [];
 
@@ -43,11 +44,10 @@ export function determineAppliedProductIds(
   ) {
     // Look up the first product set in product_sets_data
     const nestedSet = productSetsData.find(
-      (ps) => ps.id === productSet.product_ids_all![0]
+      (ps) => ps.id === productSet.product_ids_all?.[0]
     );
     if (
-      nestedSet &&
-      nestedSet.product_ids_any &&
+      nestedSet?.product_ids_any &&
       nestedSet.product_ids_any.length > 0
     ) {
       applied_product_ids = [nestedSet.product_ids_any[0]];
@@ -65,8 +65,8 @@ export function createDiscountApplications(
     discount_id: string;
     product_set_id: string;
   }>,
-  discountsData: DiscountData[],
-  productSetsData: ProductSetData[],
+  discountsData: TransformedDiscount[],
+  productSetsData: TransformedProductSet[],
   allItemIds: string[]
 ): DiscountApplication[] {
   return discountToProductSetMap.map(({ discount_id, product_set_id }) => {

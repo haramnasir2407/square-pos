@@ -1,7 +1,21 @@
 import { API_CONFIG } from "@/shared/constants/api";
+import type {
+  CatalogObject,
+  InventoryData,
+  Item,
+  ProductCatalog,
+} from "@/shared/types/catalog";
 
 // ? the data fetching logic can be added to service
-export async function useDashboardData(session: any) {
+
+export interface DashboardDataReturn {
+  products: ProductCatalog;
+  inventoryData: InventoryData;
+}
+
+export async function useDashboardData(session: {
+  accessToken: string;
+}): Promise<DashboardDataReturn> {
   // * Fetch products server side
   let products = null;
   try {
@@ -38,11 +52,13 @@ export async function useDashboardData(session: any) {
   /**
    * Extract item and variation IDs from products.
    */
-  const items =
-    products.objects?.filter((obj: any) => obj.type === "ITEM") || [];
+  const items: Item[] =
+    (products.objects as CatalogObject[])?.filter(
+      (obj): obj is Item => obj.type === "ITEM"
+    ) || [];
 
   const variationIds = items?.flatMap(
-    (item: any) => item.item_data?.variations?.map((v: any) => v.id) ?? []
+    (item: Item) => item.item_data?.variations?.map((v) => v.id) ?? []
   );
 
   // * Fetch inventory server side
@@ -68,8 +84,6 @@ export async function useDashboardData(session: any) {
   } catch (e) {
     // fail silently, fallback to client fetch
   }
-
-  // console.log(products);
 
   return { products, inventoryData };
 }

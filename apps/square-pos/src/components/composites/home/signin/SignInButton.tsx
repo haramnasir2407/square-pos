@@ -8,10 +8,6 @@ export default function SignInButton() {
     <Button
       type="button"
       onClick={startSquareOAuth}
-      variant="primary"
-      size="lg"
-      shape="rounded"
-      width="full"
       className={css({
         width: "100%",
         background: "linear-gradient(to right, #2563eb, #4f46e5)",

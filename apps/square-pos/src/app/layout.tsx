@@ -3,6 +3,7 @@ import "./globals.css";
 import { CartContextProvider } from "../shared/context/CartContext";
 import { SessionProviders } from "@/shared/providers/SessionProvider";
 import { QueryProvider } from "@/shared/providers/QueryProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default function RootLayout({
   children,
@@ -14,7 +15,9 @@ export default function RootLayout({
       <body>
         <CartContextProvider>
           <SessionProviders>
-            <QueryProvider> {children}</QueryProvider>
+            <QueryProvider>
+              {children} <ReactQueryDevtools initialIsOpen={true} />
+            </QueryProvider>
           </SessionProviders>
         </CartContextProvider>
       </body>

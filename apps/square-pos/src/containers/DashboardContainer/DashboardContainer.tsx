@@ -2,15 +2,15 @@
 
 import { redirect } from "next/navigation";
 
+import { Suspense } from "react";
 import { css } from "~/styled-system/css";
 import { center, container, stack } from "~/styled-system/patterns";
-import { Suspense } from "react";
 
-import ProductSectionSkeleton from "@/components/composites/dashboard/products/ProductSectionSkeleton";
-import ProductSection from "@/components/composites/dashboard/products/ProductSection";
 import DashboardHeader from "@/components/composites/dashboard/header/DashboardHeader";
-import { useDashboardData } from "./useDashboardData";
+import ProductSection from "@/components/composites/dashboard/products/ProductSection";
 import { auth } from "~/auth";
+import { useDashboardData } from "./useDashboardData";
+import ProductSectionSkeleton from "@/components/composites/dashboard/products/ProductSectionSkeleton";
 
 /**
  * DashboardContainer is an async server component that handles all data fetching
@@ -25,7 +25,9 @@ export default async function DashboardContainer() {
   }
 
   // * custom hook that fetches data server side
-  const { products, inventoryData } = await useDashboardData(session);
+  const { products, inventoryData } = await useDashboardData({
+    accessToken: session.accessToken ?? "",
+  });
 
   return (
     <div className={css({ minH: "100vh", bg: "gray.50" })}>
@@ -60,7 +62,7 @@ export default async function DashboardContainer() {
               </div>
 
               {/* Product Section */}
-              <Suspense fallback={<ProductSectionSkeleton />}>
+              <Suspense fallback={<ProductSectionSkeleton/>}>
                 <ProductSection
                   accessToken={session.accessToken ?? ""}
                   products={products}
