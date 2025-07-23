@@ -1,11 +1,9 @@
 // * this container contains the business logic and the UI
 
 import { redirect } from "next/navigation";
-
 import { Suspense } from "react";
 import { css } from "~/styled-system/css";
 import { center, container, stack } from "~/styled-system/patterns";
-
 import DashboardHeader from "@/components/composites/dashboard/header/DashboardHeader";
 import ProductSection from "@/components/composites/dashboard/products/ProductSection";
 import { auth } from "~/auth";

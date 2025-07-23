@@ -2,16 +2,16 @@
 
 import { useState, useEffect } from "react";
 
-
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { css } from "~/styled-system/css";
+import type { paramsType } from "@/shared/types/catalog";
 
 /**
  * Props for the SearchBar component.
  */
 interface SearchBarProps {
-  setParams: (params: Record<string, any>) => void;
-  prevParams: Record<string, any>;
+  setParams: (params: paramsType) => void;
+  prevParams: paramsType;
 }
 
 /**
@@ -28,7 +28,9 @@ export default function SearchBar({ setParams, prevParams }: SearchBarProps) {
       setParams({
         ...prevParams,
         query: {
-          ...prevParams.query,
+          ...(typeof prevParams.query === "object" && prevParams.query
+            ? prevParams.query
+            : {}),
           text_query: {
             keywords: [debouncedSearch],
           },
@@ -37,9 +39,12 @@ export default function SearchBar({ setParams, prevParams }: SearchBarProps) {
     } else {
       // If less than 3 chars, show initial product listing, remove search query
       setParams({
-        types: "item, image, category, tax, discount, pricing_rule, product_set",
+        types:
+          "item, image, category, tax, discount, pricing_rule, product_set",
         query: {
-          ...prevParams.query,
+          ...(typeof prevParams.query === "object" && prevParams.query
+            ? prevParams.query
+            : {}),
           text_query: undefined,
         },
       });

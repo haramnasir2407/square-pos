@@ -2,6 +2,7 @@
 
 import DashboardLoader from "@/components/primitives/derived/DashboardLoader";
 import { useProductSectionData } from "@/shared/hooks/useProductSectionData";
+import type { InventoryData, ProductCatalog } from "@/shared/types/catalog";
 import { css } from "~/styled-system/css";
 import CartDrawer from "../cart/CartDrawer";
 import FilterButton from "../filter/FilterButton";
@@ -13,8 +14,8 @@ import ProductCard from "./ProductCard";
  */
 type ProductSectionProps = {
   accessToken: string;
-  products?: any;
-  inventory?: any;
+  products?: ProductCatalog;
+  inventory?: InventoryData;
 };
 
 /**
@@ -83,7 +84,7 @@ export default function ProductSection({
           gap: "4",
         })}
       >
-        {items.map((item: any) => {
+        {items.map((item) => {
           // * Extract product and variation details
           const name = item.item_data?.name ?? "Name unknown";
           const variation =
@@ -98,19 +99,19 @@ export default function ProductSection({
 
           // * Match tax ids with taxes_data
           const matchedTaxes = (tax_ids ?? []).map((tax_id: string) => {
-            const tax = taxes_data.find((t: any) => t.id === tax_id);
+            const tax = taxes_data.find((t) => t.id === tax_id);
             return tax ? { name: tax.name, percentage: tax.percentage } : null;
           });
 
           // * Build discounts array for each item
           const discounts = discountApplications
-            .filter((app: any) => {
+            .filter((app) => {
               if (app.applied_product_ids.includes(item.id)) return true;
               if (categoryId && app.applied_product_ids.includes(categoryId))
                 return true;
               return false;
             })
-            .map((app: any) => ({
+            .map((app) => ({
               discount_name: app.discount_name,
               discount_value: app.discount_value,
             }));
@@ -141,7 +142,10 @@ export default function ProductSection({
                 is_taxable={is_taxable}
                 variantId={variationId}
                 discounts={discounts}
-                taxes={matchedTaxes}
+                taxes={matchedTaxes.filter(
+                  (tax): tax is { name: string; percentage: string | number } =>
+                    tax !== null
+                )}
               />
             </div>
           );

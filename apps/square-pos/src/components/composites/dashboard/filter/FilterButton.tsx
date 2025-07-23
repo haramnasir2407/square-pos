@@ -6,15 +6,15 @@ import { useState } from "react";
 import { css } from "~/styled-system/css";
 import categoryObjects from "@/shared/constants/categories.json";
 
-import { CategoryObject } from "@/shared/types/product";
 import { buildCategoryFilterParams } from "@/shared/utils/filter/filterUtils";
+import type { CategoryObject, paramsType } from "@/shared/types/catalog";
 
 /**
  * Props for the FilterButton component.
  */
 type FilterButtonProps = {
-  setParams: (params: Record<string, any>) => void;
-  prevParams: Record<string, any>;
+  setParams: (params: paramsType) => void;
+  prevParams: paramsType;
 };
 
 /**

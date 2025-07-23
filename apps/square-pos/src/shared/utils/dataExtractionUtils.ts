@@ -1,7 +1,5 @@
 import type {
-  CatalogObject,
   Category,
-  CategoryObject,
   Discount,
   Image,
   Item,

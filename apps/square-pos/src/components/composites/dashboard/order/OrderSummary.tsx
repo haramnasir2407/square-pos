@@ -1,11 +1,13 @@
-import { calculateOrderData } from "@/shared/utils/cart/cartDrawerUtils";
-import { useEffect, useState } from "react";
-import { css } from "~/styled-system/css/css.mjs";
-import { OrderConfirmation } from "./OrderConfirmation";
 import {
   ORDER_LEVEL_DISCOUNTS,
   ORDER_LEVEL_TAXES,
 } from "@/shared/constants/order_discounts_taxes";
+import type { CartItem } from "@/shared/context/CartContext";
+import type { OrderPreview } from "@/shared/types/order";
+import { calculateOrderData } from "@/shared/utils/cart/cartDrawerUtils";
+import { useEffect, useState } from "react";
+import { css } from "~/styled-system/css/css.mjs";
+import { OrderConfirmation } from "./OrderConfirmation";
 
 /**
  * Props for the OrderSummary component.
@@ -17,7 +19,7 @@ import {
  * @property setOpen - Controls drawer open/close state
  */
 type OrderSummaryProps = {
-  items: any[];
+  items: CartItem[];
   accessToken: string;
   onGoBack: () => void;
   clearCart: () => void;
@@ -37,9 +39,9 @@ export const OrderSummary = ({
   setShowCheckout,
   setOpen,
 }: OrderSummaryProps) => {
-  const [orderPreview, setOrderPreview] = useState<any>(null);
+  const [orderPreview, setOrderPreview] = useState<OrderPreview | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   /**
@@ -87,7 +89,7 @@ export const OrderSummary = ({
         setOrderPreview(result);
       } catch (err) {
         console.error("Error creating order:", err);
-        setError(err instanceof Error ? err.message : "An error occurred");
+        setError(err instanceof Error ? err : new Error("An error occurred"));
       } finally {
         setIsLoading(false);
       }
@@ -113,14 +115,14 @@ export const OrderSummary = ({
    * @returns Tax name or fallback
    */
   const getTaxName = (uid: string) =>
-    orderPreview?.order?.taxes?.find((t: any) => t.uid === uid)?.name || "Tax";
+    orderPreview?.order?.taxes?.find((t) => t.uid === uid)?.name || "Tax";
   /**
    * Gets the discount name by UID from the order preview.
    * @param uid - Discount UID
    * @returns Discount name or fallback
    */
   const getDiscountName = (uid: string) =>
-    orderPreview?.order?.discounts?.find((d: any) => d.uid === uid)?.name ||
+    orderPreview?.order?.discounts?.find((d) => d.uid === uid)?.name ||
     "Discount";
 
   if (isLoading) {
@@ -176,7 +178,7 @@ export const OrderSummary = ({
         <h2 className={css({ fontSize: "xl", fontWeight: "bold", mb: "2" })}>
           Order Failed
         </h2>
-        <p className={css({ color: "gray.600", mb: "4" })}>{error}</p>
+        <p className={css({ color: "gray.600", mb: "4" })}>{error.message}</p>
       </div>
     );
   }
@@ -220,6 +222,7 @@ export const OrderSummary = ({
         })}
       >
         <button
+          type="button"
           onClick={onGoBack}
           className={css({
             position: "absolute",
@@ -265,79 +268,75 @@ export const OrderSummary = ({
               Items ({orderPreview?.order?.line_items?.length || 0})
             </h4>
             <div className={css({ spaceY: "2" })}>
-              {orderPreview?.order?.line_items?.map(
-                (item: any, index: number) => (
+              {orderPreview?.order?.line_items?.map((item, index: number) => (
+                <div
+                  key={index}
+                  className={css({
+                    display: "flex",
+                    flexDirection: "column",
+                    py: "2",
+                    px: "3",
+                    bg: "gray.50",
+                    borderRadius: "md",
+                    mb: "2",
+                  })}
+                >
                   <div
-                    key={index}
+                    className={css({ fontWeight: "medium", fontSize: "sm" })}
+                  >
+                    {item.name}
+                  </div>
+                  <div className={css({ color: "gray.600", fontSize: "xs" })}>
+                    Qty: {item.quantity} ×{" "}
+                    {formatMoney(item.base_price_money?.amount)}
+                  </div>
+                  {/* Old value (before discounts/taxes) */}
+                  <div className={css({ color: "gray.500", fontSize: "xs" })}>
+                    <b>Original:</b>{" "}
+                    {formatMoney(item.gross_sales_money?.amount)}
+                  </div>
+                  {/* Applied Discounts */}
+                  {item.applied_discounts?.length > 0 && (
+                    <div
+                      className={css({ color: "green.600", fontSize: "xs" })}
+                    >
+                      <b>Discounts:</b>
+                      <ul style={{ margin: 0, paddingLeft: 16 }}>
+                        {item.applied_discounts.map((d) => (
+                          <li key={d.uid}>
+                            {getDiscountName(d.discount_uid)}: -
+                            {formatMoney(d.applied_money?.amount)}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {/* Applied Taxes */}
+                  {item.applied_taxes?.length > 0 && (
+                    <div className={css({ color: "blue.600", fontSize: "xs" })}>
+                      <b>Taxes:</b>
+                      <ul style={{ margin: 0, paddingLeft: 16 }}>
+                        {item.applied_taxes.map((t) => (
+                          <li key={t.uid}>
+                            {getTaxName(t.tax_uid)}: +
+                            {formatMoney(t.applied_money?.amount)}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {/* New value (after discounts/taxes) */}
+                  <div
                     className={css({
-                      display: "flex",
-                      flexDirection: "column",
-                      py: "2",
-                      px: "3",
-                      bg: "gray.50",
-                      borderRadius: "md",
-                      mb: "2",
+                      color: "gray.800",
+                      fontSize: "sm",
+                      fontWeight: "bold",
                     })}
                   >
-                    <div
-                      className={css({ fontWeight: "medium", fontSize: "sm" })}
-                    >
-                      {item.name}
-                    </div>
-                    <div className={css({ color: "gray.600", fontSize: "xs" })}>
-                      Qty: {item.quantity} ×{" "}
-                      {formatMoney(item.base_price_money?.amount)}
-                    </div>
-                    {/* Old value (before discounts/taxes) */}
-                    <div className={css({ color: "gray.500", fontSize: "xs" })}>
-                      <b>Original:</b>{" "}
-                      {formatMoney(item.gross_sales_money?.amount)}
-                    </div>
-                    {/* Applied Discounts */}
-                    {item.applied_discounts?.length > 0 && (
-                      <div
-                        className={css({ color: "green.600", fontSize: "xs" })}
-                      >
-                        <b>Discounts:</b>
-                        <ul style={{ margin: 0, paddingLeft: 16 }}>
-                          {item.applied_discounts.map((d: any) => (
-                            <li key={d.uid}>
-                              {getDiscountName(d.discount_uid)}: -
-                              {formatMoney(d.applied_money?.amount)}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {/* Applied Taxes */}
-                    {item.applied_taxes?.length > 0 && (
-                      <div
-                        className={css({ color: "blue.600", fontSize: "xs" })}
-                      >
-                        <b>Taxes:</b>
-                        <ul style={{ margin: 0, paddingLeft: 16 }}>
-                          {item.applied_taxes.map((t: any) => (
-                            <li key={t.uid}>
-                              {getTaxName(t.tax_uid)}: +
-                              {formatMoney(t.applied_money?.amount)}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {/* New value (after discounts/taxes) */}
-                    <div
-                      className={css({
-                        color: "gray.800",
-                        fontSize: "sm",
-                        fontWeight: "bold",
-                      })}
-                    >
-                      <b>Final:</b> {formatMoney(item.total_money?.amount)}
-                    </div>
+                    <b>Final:</b> {formatMoney(item.total_money?.amount)}
                   </div>
-                )
-              )}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -371,6 +370,7 @@ export const OrderSummary = ({
         </div>
 
         <button
+          type="button"
           onClick={handlePlaceOrder}
           className={css({
             px: "6",

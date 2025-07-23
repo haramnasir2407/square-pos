@@ -6,6 +6,7 @@ import { css } from "~/styled-system/css";
 export function DashboardSignOutButton() {
   return (
     <button
+      type="button"
       onClick={() => signOut()}
       className={css({
         px: "4",

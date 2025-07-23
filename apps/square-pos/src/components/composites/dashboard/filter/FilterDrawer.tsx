@@ -7,7 +7,7 @@ import {
   isCategorySelected,
   clearSelectedCategories,
 } from "@/shared/utils/filter/filterUtils";
-import { CategoryObject } from "@/shared/types/product";
+import type { CategoryObject } from "@/shared/types/catalog";
 
 /**
  * Props for the FilterDrawer component.
@@ -76,6 +76,16 @@ export default function FilterDrawer({
             zIndex: 99,
           })}
           onClick={onClose}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              onClose();
+            }
+          }}
+          onKeyUp={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              onClose();
+            }
+          }}
         />
       )}
       {/* Drawer */}
@@ -97,6 +107,7 @@ export default function FilterDrawer({
         })}
       >
         <button
+          type="button"
           className={css({
             alignSelf: "flex-end",
             fontSize: "2xl",
@@ -138,6 +149,7 @@ export default function FilterDrawer({
         )}
 
         <button
+          type="button"
           className={css({
             mt: 6,
             py: 3,
@@ -155,6 +167,7 @@ export default function FilterDrawer({
           Apply Filter
         </button>
         <button
+          type="button"
           className={css({
             mt: 2,
             py: 3,

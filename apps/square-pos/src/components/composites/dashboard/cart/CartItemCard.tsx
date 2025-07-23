@@ -6,22 +6,23 @@ import Image from "next/image";
 
 import CustomSelect from "@/components/primitives/derived/CustomSelect";
 import { css } from "~/styled-system/css";
+import type { CartItem, Discount, TaxRate } from "@/shared/context/CartContext";
 
 /**
  * Props for CartItemCard
  */
 type CartItemCardProps = {
-  item: any;
+  item: CartItem;
   inventory: { state: string; quantity: string };
   atMaxQty: boolean;
-  selectedDiscount: any;
-  selectedTax: any;
-  discounts: any[];
-  taxes: any[];
+  selectedDiscount: Discount;
+  selectedTax: TaxRate;
+  discounts: Discount[];
+  taxes: TaxRate[];
   onQtyChange: (qty: number) => void;
   onRemove: () => void;
   onDiscountToggle: (checked: boolean) => void;
-  onDiscountSelect: (discount: any) => void;
+  onDiscountSelect: (discount: Discount) => void;
   onTaxToggle: (checked: boolean) => void;
   onTaxSelect: (value: string) => void;
 };
@@ -82,6 +83,7 @@ export default function CartItemCard({
           </div>
         </div>
         <button
+          type="button"
           className={css({
             color: "red.500",
             fontSize: "lg",
@@ -105,6 +107,7 @@ export default function CartItemCard({
         })}
       >
         <button
+          type="button"
           className={css({
             px: "2",
             py: "0.5",
@@ -123,6 +126,7 @@ export default function CartItemCard({
           {item.quantity}
         </span>
         <button
+          type="button"
           className={css({
             px: "2",
             py: "0.5",
@@ -139,6 +143,7 @@ export default function CartItemCard({
           +
         </button>
         <button
+          type="button"
           className={css({
             ml: "auto",
             fontSize: "xs",
@@ -175,6 +180,7 @@ export default function CartItemCard({
               })}
             >
               <label
+                htmlFor="tax"
                 className={css({
                   fontSize: "xs",
                   display: "flex",
@@ -183,6 +189,7 @@ export default function CartItemCard({
                 })}
               >
                 <input
+                  id="tax"
                   className={css({ mr: "1" })}
                   type="checkbox"
                   checked={!!item.is_taxable && item.itemTaxRate !== undefined}
@@ -191,6 +198,7 @@ export default function CartItemCard({
                 Apply Tax
               </label>
               <CustomSelect
+                id="tax"
                 value={item.itemTaxRate?.toString() ?? ""}
                 onChange={onTaxSelect}
                 options={[
@@ -216,6 +224,7 @@ export default function CartItemCard({
               })}
             >
               <label
+                htmlFor="discount"
                 className={css({
                   fontSize: "xs",
                   display: "flex",
@@ -224,6 +233,7 @@ export default function CartItemCard({
                 })}
               >
                 <input
+                  id="discount"
                   className={css({ mr: "1" })}
                   type="checkbox"
                   checked={!!item.itemDiscount}
@@ -232,12 +242,13 @@ export default function CartItemCard({
                 Apply Discount
               </label>
               <CustomSelect
+                id="discount"
                 value={selectedDiscount?.discount_name || ""}
                 onChange={(value) => {
                   const discount = discounts.find(
                     (d) => d.discount_name === value
                   );
-                  onDiscountSelect(discount);
+                  onDiscountSelect(discount as Discount);
                 }}
                 options={[
                   { value: "", label: "Select Discount" },

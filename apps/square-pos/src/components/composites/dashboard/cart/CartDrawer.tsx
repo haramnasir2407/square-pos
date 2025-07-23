@@ -2,7 +2,11 @@
 
 import { useContext, useState } from "react";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
-import { CartContext, TaxRate } from "../../../../shared/context/CartContext";
+import {
+  CartContext,
+  type CartItem,
+  TaxRate,
+} from "../../../../shared/context/CartContext";
 import { OrderSummary } from "../order/OrderSummary";
 
 import CustomSelect from "@/components/primitives/derived/CustomSelect";
@@ -31,9 +35,25 @@ type CartDrawerProps = {
  * @property {number} [itemTaxRate] - Selected tax rate for the item.
  * @property {boolean} [enabled] - Whether tax is enabled for the item.
  */
+
+type SelectedDiscount = {
+  discount_name: string;
+  discount_value: string | number | null;
+};
+
 type SelectedTax = {
   itemTaxRate?: number;
   enabled?: boolean;
+};
+
+type SelectedOrderDiscount = {
+  name: string;
+  percentage: string;
+};
+
+type SelectedOrderTax = {
+  name: string;
+  percentage: string;
 };
 
 /**
@@ -63,7 +83,7 @@ export default function CartDrawer({
 
   // * store selected discount per item
   const [selectedDiscounts, setSelectedDiscounts] = useState<
-    Record<string, any>
+    Record<string, SelectedDiscount>
   >({});
 
   // * store selected taxes per item
@@ -72,8 +92,10 @@ export default function CartDrawer({
   >({});
 
   // * store selected order-level discount/tax
-  const [selectedOrderDiscount, setSelectedOrderDiscount] = useState<any>(null);
-  const [selectedOrderTax, setSelectedOrderTax] = useState<any>(null);
+  const [selectedOrderDiscount, setSelectedOrderDiscount] =
+    useState<SelectedOrderDiscount | null>(null);
+  const [selectedOrderTax, setSelectedOrderTax] =
+    useState<SelectedOrderTax | null>(null);
 
   // * exclusivity logic: if order-level is selected, disable item-level, and vice versa
   const isOrderLevelActive = !!selectedOrderDiscount || !!selectedOrderTax;
@@ -88,7 +110,10 @@ export default function CartDrawer({
    * @param {"discount"|"tax"} type - Type of order-level change.
    * @param {any} value - Selected discount or tax value.
    */
-  const handleOrderLevelChange = (type: "discount" | "tax", value: any) => {
+  const handleOrderLevelChange = (
+    type: "discount" | "tax",
+    value: SelectedOrderDiscount | SelectedOrderTax | null
+  ) => {
     if (type === "discount") {
       setSelectedOrderDiscount(value);
     } else {
@@ -100,7 +125,10 @@ export default function CartDrawer({
       toggleItemTax(item.id, false);
       // Only call setItemTaxRate if item.itemTaxRate is a number
       if (typeof item.itemTaxRate === "number") {
-        setItemTaxRate(item.id, 0); // set to 0 to clear
+        setItemTaxRate(item.id, {
+          name: item.name,
+          percentage: 0,
+        }); // set to 0 to clear
       }
     });
   };
@@ -127,23 +155,22 @@ export default function CartDrawer({
       let taxAmount = 0;
       if (selectedOrderDiscount) {
         const percent = Number.parseFloat(selectedOrderDiscount.percentage);
-        if (!isNaN(percent)) {
+        if (!Number.isNaN(percent)) {
           discountAmount = (subtotal * percent) / 100;
         }
       }
       const discountedSubtotal = subtotal - discountAmount;
       if (selectedOrderTax) {
         const percent = Number.parseFloat(selectedOrderTax.percentage);
-        if (!isNaN(percent)) {
+        if (!Number.isNaN(percent)) {
           taxAmount = (discountedSubtotal * percent) / 100;
         }
       }
       const total = discountedSubtotal + taxAmount;
       return { subtotal, discountAmount, taxAmount, total };
-    } else {
-      // fallback to context's item-level summary
-      return getOrderSummary();
     }
+    // fallback to context's item-level summary
+    return getOrderSummary();
   };
 
   const drawerOrderSummary = getDrawerOrderSummary();
@@ -153,7 +180,7 @@ export default function CartDrawer({
    * @param {any} item - The cart item.
    * @param {boolean} checked - Whether the discount is applied.
    */
-  const handleDiscountToggle = (item: any, checked: boolean) => {
+  const handleDiscountToggle = (item: CartItem, checked: boolean) => {
     handleItemLevelChange();
     if (checked && selectedDiscounts[item.id]) {
       applyItemDiscount(item.id, selectedDiscounts[item.id]);
@@ -167,7 +194,7 @@ export default function CartDrawer({
    * @param {any} item - The cart item.
    * @param {any} discount - The selected discount.
    */
-  const handleDiscountSelect = (item: any, discount: any) => {
+  const handleDiscountSelect = (item: CartItem, discount: SelectedDiscount) => {
     setSelectedDiscounts((prev) => ({
       ...prev,
       [item.id]: discount,
@@ -179,7 +206,7 @@ export default function CartDrawer({
    * @param {any} item - The cart item.
    * @param {boolean} checked - Whether the tax is applied.
    */
-  const handleTaxToggle = (item: any, checked: boolean) => {
+  const handleTaxToggle = (item: CartItem, checked: boolean) => {
     handleItemLevelChange();
     toggleItemTax(item.id, checked);
   };
@@ -189,7 +216,7 @@ export default function CartDrawer({
    * @param {any} item - The cart item.
    * @param {string} value - The selected tax rate value.
    */
-  const handleTaxSelect = (item: any, value: string) => {
+  const handleTaxSelect = (item: CartItem, value: string) => {
     const taxRate = value === "" ? undefined : Number.parseFloat(value);
     setSelectedTaxes((prev) => ({
       ...prev,
@@ -199,13 +226,17 @@ export default function CartDrawer({
       },
     }));
     if (typeof taxRate === "number") {
-      setItemTaxRate(item.id, taxRate);
+      setItemTaxRate(item.id, {
+        name: item.name,
+        percentage: taxRate,
+      });
     }
   };
 
   return (
     <>
       <button
+        type="button"
         className={css({
           position: "fixed",
           top: "3",
@@ -249,6 +280,7 @@ export default function CartDrawer({
         style={{ transform: open ? "translateX(0)" : "translateX(100%)" }}
       >
         <button
+          type="button"
           className={css({
             alignSelf: "flex-end",
             mb: "4",
@@ -336,6 +368,7 @@ export default function CartDrawer({
               >
                 {/* Order-level discount/tax controls */}
                 <label
+                  htmlFor="order-discount"
                   className={css({
                     fontSize: "sm",
                     fontWeight: "bold",
@@ -345,12 +378,16 @@ export default function CartDrawer({
                   Order Discount:
                 </label>
                 <CustomSelect
+                  id="order-discount"
                   value={selectedOrderDiscount?.name || ""}
                   onChange={(value) => {
                     const discount =
                       ORDER_LEVEL_DISCOUNTS.find((d) => d.name === value) ||
                       null;
-                    handleOrderLevelChange("discount", discount);
+                    handleOrderLevelChange(
+                      "discount",
+                      discount as SelectedOrderDiscount
+                    );
                   }}
                   disabled={isItemLevelActive}
                   options={[
@@ -365,6 +402,7 @@ export default function CartDrawer({
                   className={css({ mr: "2" })}
                 />
                 <label
+                  htmlFor="order-tax"
                   className={css({
                     fontSize: "sm",
                     fontWeight: "bold",
@@ -374,6 +412,7 @@ export default function CartDrawer({
                   Order Tax:
                 </label>
                 <CustomSelect
+                  id="order-tax"
                   value={selectedOrderTax?.name || ""}
                   onChange={(value) => {
                     const tax =
@@ -436,6 +475,7 @@ export default function CartDrawer({
                 </div>
               </div>
               <button
+                type="button"
                 className={css({
                   w: "full",
                   bg: "gray.200",
@@ -455,6 +495,7 @@ export default function CartDrawer({
                 Clear Cart
               </button>
               <button
+                type="button"
                 className={css({
                   w: "full",
                   bg: "green.600",
@@ -497,6 +538,16 @@ export default function CartDrawer({
             zIndex: 99,
           })}
           onClick={() => setOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setOpen(false);
+            }
+          }}
+          onKeyUp={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setOpen(false);
+            }
+          }}
         />
       )}
     </>

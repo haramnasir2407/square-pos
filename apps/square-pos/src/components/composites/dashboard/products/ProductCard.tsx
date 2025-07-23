@@ -49,7 +49,7 @@ export default function ProductCard({
    * The available inventory quantity for the product.
    */
   const inventoryQty =
-    typeof quantity === "string" ? parseInt(quantity, 10) : quantity ?? 0;
+    typeof quantity === "string" ? Number(quantity) : (quantity ?? 0);
   /**
    * Whether the product is out of stock.
    */
@@ -146,6 +146,7 @@ export default function ProductCard({
             })}
           >
             <button
+              type="button"
               className={css({
                 px: "2",
                 py: "1",
@@ -159,6 +160,7 @@ export default function ProductCard({
             </button>
             <span className={css({ px: "2" })}>{cartItem.quantity}</span>
             <button
+              type="button"
               className={css({
                 px: "2",
                 py: "1",
@@ -173,6 +175,7 @@ export default function ProductCard({
               +
             </button>
             <button
+              type="button"
               className={css({ ml: "2", color: "red.500", fontSize: "sm" })}
               onClick={() => removeFromCart(id)}
             >
@@ -181,6 +184,7 @@ export default function ProductCard({
           </div>
         ) : (
           <button
+            type="button"
             className={css({
               mt: "1",
               px: "4",
