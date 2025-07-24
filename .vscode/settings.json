@@ -20,5 +20,8 @@
   },
   "editor.minimap.enabled": false,
   "editor.colorDecorators": true,
-  "editor.colorDecoratorsActivatedOn": "click"
+  "editor.colorDecoratorsActivatedOn": "click",
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

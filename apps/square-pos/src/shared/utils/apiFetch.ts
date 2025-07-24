@@ -7,7 +7,7 @@ import { API_CONFIG } from "@/shared/constants/api";
  * @param accessToken - Optional access token for Authorization header
  * @returns Parsed JSON response
  */
-export async function apiFetch<T = any>(
+export async function apiFetch<T>(
   url: string,
   options: RequestInit = {},
   accessToken?: string

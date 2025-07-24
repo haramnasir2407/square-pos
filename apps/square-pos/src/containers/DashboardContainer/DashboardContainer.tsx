@@ -18,8 +18,8 @@ export default async function DashboardContainer() {
   // * Check the session
   const session = await auth();
   if (!session) {
-    // redirect("/");
     redirect("/signin");
+    return null;
   }
 
   // * custom hook that fetches data server side
@@ -27,11 +27,9 @@ export default async function DashboardContainer() {
     accessToken: session.accessToken ?? "",
   });
 
-
   return (
     <div className={css({ minH: "100vh", bg: "gray.50" })}>
       <DashboardHeader />
-  
 
       <main className={css({ py: ["6", "8", "12"], mt: "6" })}>
         <div className={container({ maxW: "7xl" })}>
