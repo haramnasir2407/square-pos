@@ -51,6 +51,8 @@ export function useProductSectionData({
     types: "item, image, category, tax, discount, pricing_rule, product_set",
   });
 
+  console.log("params", params.query);
+
   // * custom hook for fetching products - only run when there's a query
   const { data, isPending, error } = useProductList(
     params.query ? accessToken : "",

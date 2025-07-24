@@ -325,7 +325,10 @@ export default function CartDrawer({
                       inventory={inventory}
                       atMaxQty={atMaxQty}
                       selectedDiscount={selectedDiscounts[item.id]}
-                      selectedTax={selectedTaxes[item.id]}
+                      selectedTax={{
+                        name: item.name,
+                        percentage: selectedTaxes[item.id]?.itemTaxRate ?? 0,
+                      }}
                       discounts={discounts}
                       taxes={taxes}
                       onQtyChange={(qty) => updateQuantity(item.id, qty)}

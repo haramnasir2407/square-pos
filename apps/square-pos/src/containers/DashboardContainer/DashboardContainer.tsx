@@ -1,14 +1,14 @@
 // * this container contains the business logic and the UI
 
-import { redirect } from "next/navigation";
-import { Suspense } from "react";
-import { css } from "~/styled-system/css";
-import { center, container, stack } from "~/styled-system/patterns";
 import DashboardHeader from "@/components/composites/dashboard/header/DashboardHeader";
 import ProductSection from "@/components/composites/dashboard/products/ProductSection";
-import { auth } from "~/auth";
-import { useDashboardData } from "./useDashboardData";
 import ProductSectionSkeleton from "@/components/composites/dashboard/products/ProductSectionSkeleton";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { auth } from "~/auth";
+import { css } from "~/styled-system/css";
+import { center, container, stack } from "~/styled-system/patterns";
+import { useDashboardData } from "./useDashboardData";
 
 /**
  * DashboardContainer is an async server component that handles all data fetching
@@ -27,9 +27,11 @@ export default async function DashboardContainer() {
     accessToken: session.accessToken ?? "",
   });
 
+
   return (
     <div className={css({ minH: "100vh", bg: "gray.50" })}>
       <DashboardHeader />
+  
 
       <main className={css({ py: ["6", "8", "12"], mt: "6" })}>
         <div className={container({ maxW: "7xl" })}>
@@ -60,7 +62,7 @@ export default async function DashboardContainer() {
               </div>
 
               {/* Product Section */}
-              <Suspense fallback={<ProductSectionSkeleton/>}>
+              <Suspense fallback={<ProductSectionSkeleton />}>
                 <ProductSection
                   accessToken={session.accessToken ?? ""}
                   products={products}

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useDebounce } from "@/shared/hooks/useDebounce";
-import { css } from "~/styled-system/css";
 import type { paramsType } from "@/shared/types/catalog";
+import { css } from "~/styled-system/css";
 
 /**
  * Props for the SearchBar component.
@@ -66,6 +66,7 @@ export default function SearchBar({ setParams, prevParams }: SearchBarProps) {
       })}
     >
       <input
+        id="search-bar"
         type="text"
         value={searchInput}
         onChange={(event) => setSearchInput(event.target.value)}

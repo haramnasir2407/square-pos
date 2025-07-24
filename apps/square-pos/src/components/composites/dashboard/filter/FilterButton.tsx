@@ -1,13 +1,14 @@
 "use client";
 
-import { FaFilter } from "react-icons/fa";
-import FilterDrawer from "./FilterDrawer";
-import { useState } from "react";
-import { css } from "~/styled-system/css";
 import categoryObjects from "@/shared/constants/categories.json";
+import { useState } from "react";
+import { FaFilter } from "react-icons/fa";
+import { css } from "~/styled-system/css";
+import FilterDrawer from "./FilterDrawer";
 
-import { buildCategoryFilterParams } from "@/shared/utils/filter/filterUtils";
 import type { CategoryObject, paramsType } from "@/shared/types/catalog";
+import { buildCategoryFilterParams } from "@/shared/utils/filter/filterUtils";
+import { Button } from "@/components/primitives/ui/button";
 
 /**
  * Props for the FilterButton component.
@@ -37,12 +38,13 @@ export default function FilterButton({
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
         type="button"
+        onClick={() => setOpen(true)}
         className={css({
           display: "flex",
           alignItems: "center",
           alignSelf: "flex-start",
+          justifyContent: "space-between",
           gap: 2,
           height: "45px",
           px: 4,

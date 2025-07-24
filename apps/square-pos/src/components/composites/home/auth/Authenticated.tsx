@@ -130,14 +130,14 @@ export default function Authenticated({ session }: sessionProps) {
               >
                 {session.user?.name}
               </p>
-              {session.user?.id && (
+              {session.merchantId && (
                 <p
                   className={css({
                     fontSize: "14px",
                     color: "#6b7280",
                   })}
                 >
-                  Merchant ID: {session.user?.id}
+                  Merchant ID: {session.merchantId}
                 </p>
               )}
             </div>

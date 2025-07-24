@@ -5,6 +5,6 @@ import { DashboardContainer } from "@/containers/DashboardContainer";
  * Fetches products and inventory server-side, and renders the product section.
  * Redirects to home if not authenticated.
  */
-export default async function DashboardPage() {
+export default function DashboardPage() {
   return <DashboardContainer />;
 }

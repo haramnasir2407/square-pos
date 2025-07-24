@@ -2,8 +2,11 @@
 import { useContext } from "react";
 
 import Image from "next/image";
-import { CartContext } from "../../../../shared/context/CartContext";
+import { CartContext } from "@/shared/context/CartContext";
 import { css } from "~/styled-system/css";
+import { Paragraph } from "@/components/primitives/ui/typography";
+import { Button } from "@/components/primitives/ui/button";
+import { paragraph } from "~/styled-system/recipes";
 
 /**
  * Props for the ProductCard component.
@@ -81,6 +84,7 @@ export default function ProductCard({
         })}
       >
         <Image
+          priority={true}
           src={imageUrl}
           alt={name}
           width={180}
@@ -93,11 +97,13 @@ export default function ProductCard({
       <h3 className={css({ fontSize: "sm", fontWeight: "semibold" })}>
         {name}
       </h3>
-      <p className={css({ fontSize: "sm", color: "gray.600" })}>
+
+      <Paragraph className={css({ color: "gray.600", fontSize: "sm" })}>
         {price !== null
           ? `$${(price / 100).toFixed(2)}`
-          : "Price not available"}
-      </p>
+          : "Price not available"}{" "}
+      </Paragraph>
+
       <div
         className={css({
           mt: "2",

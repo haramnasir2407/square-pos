@@ -16,7 +16,7 @@ export default function RootLayout({
         <CartContextProvider>
           <SessionProviders>
             <QueryProvider>
-              {children} <ReactQueryDevtools initialIsOpen={true} />
+              {children} <ReactQueryDevtools initialIsOpen={false} />
             </QueryProvider>
           </SessionProviders>
         </CartContextProvider>

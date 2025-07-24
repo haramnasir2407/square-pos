@@ -32,7 +32,6 @@ export default function CartItemCard({
   inventory,
   atMaxQty,
   selectedDiscount,
-  selectedTax,
   discounts,
   taxes,
   onQtyChange,
