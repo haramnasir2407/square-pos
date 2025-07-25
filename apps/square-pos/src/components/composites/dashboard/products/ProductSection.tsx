@@ -5,9 +5,10 @@ import { useProductSectionData } from "@/shared/hooks/useProductSectionData";
 import type { InventoryData, ProductCatalog } from "@/shared/types/catalog";
 import { css } from "~/styled-system/css";
 import CartDrawer from "../cart/CartDrawer";
+
 import FilterButton from "../filter/FilterButton";
-import SearchBar from "../search/SearchBar";
 import ProductCard from "./ProductCard";
+import SearchBar from "../search/SearchBar";
 
 /**
  * Props for the ProductSection component.

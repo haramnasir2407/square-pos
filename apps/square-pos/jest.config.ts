@@ -15,6 +15,7 @@ const config: Config = {
     "^@/components/(.*)$": "<rootDir>/src/components/$1",
     "^~/auth$": "<rootDir>/auth",
     "^~/styled-system/(.*)$": "<rootDir>/src/styled-system/$1",
+    "^@/shared/(.*)$": "<rootDir>/src/shared/$1",
   },
   // Add more setup options before each test is run
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
