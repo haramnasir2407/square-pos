@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   try {
     // token exchange
     const tokenResponse = await fetch(
-      "https://connect.squareupsandbox.com/oauth2/token",
+      `${process.env.SQUARE_API_BASE}/oauth2/token`,
       {
         method: "POST",
         headers: {
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
           client_secret: process.env.SQUARE_CLIENT_SECRET ?? "",
           code: code,
           grant_type: "authorization_code",
-          redirect_uri: "http://localhost:3000/signin",
+          redirect_uri: `${process.env.SQUARE_REDIRECT_URI}`,
         }),
       }
     );
@@ -63,11 +63,11 @@ export async function GET(request: NextRequest) {
     }
 
     const tokens = JSON.parse(responseText);
-    console.log("Successfully received tokens:", tokens);
+    // console.log("Successfully received tokens:", tokens);
 
     // get merchant info
     const merchantResponse = await fetch(
-      "https://connect.squareupsandbox.com/v2/merchants/me",
+      `${process.env.SQUARE_API_BASE}/v2/merchants/me`,
       {
         headers: {
           Authorization: `Bearer ${tokens.access_token}`,

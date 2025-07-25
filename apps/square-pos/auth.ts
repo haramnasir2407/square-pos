@@ -283,11 +283,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             tokens: {
               access_token: tokens.access_token,
               refresh_token: tokens.refresh_token,
-              expires_in: tokens.expires_at
-                ? Math.floor(
-                    (new Date(tokens.expires_at).getTime() - Date.now()) / 1000
-                  )
-                : undefined,
+              // expires_in: tokens.expires_at
+              //   ? Math.floor(
+              //       (new Date(tokens.expires_at).getTime() - Date.now()) / 1000
+              //     )
+              //   : undefined,
               token_type: tokens.token_type,
             },
           };
@@ -301,7 +301,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             {
               headers: {
                 Authorization: `Bearer ${tokens.access_token}`,
-                "Square-Version": "2023-10-18",
+                "Square-Version": "2025-06-18",
               },
             }
           );
@@ -381,8 +381,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
   pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
+    signIn: "/signin",
+    // error: "/auth/error",
   },
   //   debug: process.env.NODE_ENV === "development",
 });

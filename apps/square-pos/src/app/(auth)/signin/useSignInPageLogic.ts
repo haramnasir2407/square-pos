@@ -1,4 +1,4 @@
-import handleOAuthCallback from "@/shared/utils/handleOAuthCallback";
+import handleOAuthCallback from "@/shared/utils/auth/handleOAuthCallback";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";

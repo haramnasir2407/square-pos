@@ -4,12 +4,19 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 const dummySetParams = jest.fn();
 const dummyPrevParams = { types: "item", query: {} };
 
+// * TRIPLE A PATTERN FOR WRITING TESTS
+// * ARRANGE
+// * ACT
+// * ASSERT
+
 describe("SearchBar", () => {
   it("renders input", () => {
     render(
-      <SearchBar setParams={dummySetParams} prevParams={dummyPrevParams} />
+      <SearchBar setParams={dummySetParams} prevParams={dummyPrevParams} /> // ARRANGE
     );
-    expect(screen.getByRole("textbox")).toBeInTheDocument();
+
+    const myElem = screen.getByRole("textbox"); // ACT
+    expect(myElem).toBeInTheDocument(); // ASSERT
   });
 
   it("calls setParams when typing 3+ chars", async () => {

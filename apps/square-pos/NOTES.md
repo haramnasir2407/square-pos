@@ -14,3 +14,7 @@ Zustand has built-in support for persisting state. Zustand can easily integrate 
 
 Your cart state will be saved to localStorage under the key cart-storage.
 On page reload, Zustand will rehydrate the state from storage.
+
+## to-do
+
+- go thru auth.ts

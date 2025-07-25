@@ -1,13 +1,12 @@
-import { Button } from "@/components/primitives/ui/button";
-import { startSquareOAuth } from "@/shared/utils/auth/startOAuth";
+import { signIn } from "next-auth/react";
 import { css } from "~/styled-system/css";
 import { flex } from "~/styled-system/patterns";
 
-export default function SignInButton() {
+export default function SignInButtonTest() {
   return (
-    <Button
+    <button
       type="button"
-      onClick={startSquareOAuth}
+      onClick={() => signIn("square", { callbackUrl: "/dashboard" })}
       className={css({
         width: "100%",
         background: "linear-gradient(to right, #2563eb, #4f46e5)",
@@ -20,15 +19,7 @@ export default function SignInButton() {
           transform: "scale(1.02)",
           boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
         },
-        _focus: {
-          outline: "none",
-          ring: "2px",
-          ringColor: "#3b82f6",
-          ringOffset: "2px",
-        },
         transition: "all 0.2s",
-        transform: "scale(1)",
-        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
       })}
     >
       <div
@@ -39,7 +30,10 @@ export default function SignInButton() {
         })}
       >
         <svg
-          className={css({ height: "24px", width: "24px" })}
+          className={css({
+            height: "24px",
+            width: "24px",
+          })}
           fill="currentColor"
           viewBox="0 0 24 24"
         >
@@ -48,6 +42,6 @@ export default function SignInButton() {
         </svg>
         <span>Sign in with Square</span>
       </div>
-    </Button>
+    </button>
   );
 }

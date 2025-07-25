@@ -5,6 +5,7 @@
 export const API_CONFIG = {
   // Base URLs
   SQUARE_BASE_URL: "https://connect.squareupsandbox.com",
+  // SQUARE_BASE_URL: "https://connect.squareup.com",
   SQUARE_VERSION: "2025-06-18",
 
   // API Endpoints

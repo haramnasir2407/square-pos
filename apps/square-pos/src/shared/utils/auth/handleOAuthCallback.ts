@@ -1,5 +1,5 @@
 import { signIn } from "next-auth/react";
-import type { HandleOAuthCallbackProps } from "../types/handleOAuthCallback";
+import type { HandleOAuthCallbackProps } from "../../types/handleOAuthCallback";
 
 const handleOAuthCallback = async ({
   code,

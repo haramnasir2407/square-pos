@@ -53,7 +53,7 @@ export async function useDashboardData(session: {
    * Extract item and variation IDs from products.
    */
   const items: Item[] =
-    (products.objects as CatalogObject[])?.filter(
+    (products?.objects as CatalogObject[])?.filter(
       (obj): obj is Item => obj.type === "ITEM"
     ) || [];
 

@@ -1,5 +1,6 @@
 import Authenticated from "@/components/composites/home/auth/Authenticated";
 import SignInButton from "@/components/composites/home/signin/SignInButton";
+import SignInButtonTest from "@/components/composites/home/signin/SignInButtonTest";
 import SignInText from "@/components/composites/home/signin/SignInText";
 import HomeLoader from "@/components/primitives/derived/HomeLoader";
 import { useSession } from "next-auth/react";
@@ -45,7 +46,7 @@ export default function HomeContainer() {
           >
             <SignInText />
 
-            <SignInButton />
+            <SignInButtonTest />
 
             <div
               className={css({

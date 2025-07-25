@@ -45,5 +45,11 @@ styled-system
 styled-system-studio
 
 # store.json
-.million/  
+.million/
 
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
