@@ -35,79 +35,81 @@ export default function SignInPageUI({
   }
 
   return (
-    <div
-      className={css({
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background:
-          "linear-gradient(to bottom right, #eff6ff, #e0e7ff, #f3e8ff)",
-        padding: "16px",
-      })}
-    >
+    !isProcessing && (
       <div
         className={css({
-          maxWidth: "448px",
-          width: "100%",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background:
+            "linear-gradient(to bottom right, #eff6ff, #e0e7ff, #f3e8ff)",
+          padding: "16px",
         })}
       >
         <div
           className={css({
-            backgroundColor: "white",
-            borderRadius: "16px",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-            padding: "32px",
+            maxWidth: "448px",
+            width: "100%",
           })}
         >
-          <SignInText />
-
-          {error && <ErrorComponent error={error} />}
-
-          <SignInButton />
-
           <div
             className={css({
-              marginTop: "32px",
-              textAlign: "center",
+              backgroundColor: "white",
+              borderRadius: "16px",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+              padding: "32px",
             })}
           >
-            <p
+            <SignInText />
+
+            {error && <ErrorComponent error={error} />}
+
+            <SignInButton />
+
+            <div
               className={css({
-                fontSize: "14px",
-                color: "#6b7280",
+                marginTop: "32px",
+                textAlign: "center",
               })}
             >
-              By signing in, you agree to our{" "}
-              <a
-                href="/terms"
+              <p
                 className={css({
-                  color: "#2563eb",
-                  _hover: {
-                    color: "#1d4ed8",
-                  },
-                  fontWeight: "500",
+                  fontSize: "14px",
+                  color: "#6b7280",
                 })}
               >
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a
-                href="/policy"
-                className={css({
-                  color: "#2563eb",
-                  _hover: {
-                    color: "#1d4ed8",
-                  },
-                  fontWeight: "500",
-                })}
-              >
-                Privacy Policy
-              </a>
-            </p>
+                By signing in, you agree to our{" "}
+                <a
+                  href="/terms"
+                  className={css({
+                    color: "#2563eb",
+                    _hover: {
+                      color: "#1d4ed8",
+                    },
+                    fontWeight: "500",
+                  })}
+                >
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a
+                  href="/policy"
+                  className={css({
+                    color: "#2563eb",
+                    _hover: {
+                      color: "#1d4ed8",
+                    },
+                    fontWeight: "500",
+                  })}
+                >
+                  Privacy Policy
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    )
   );
 }

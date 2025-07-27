@@ -1,7 +1,7 @@
 import { useDiscounts } from "@/shared/hooks/useDiscounts";
 import { useInventoryData } from "@/shared/hooks/useInventoryData";
 import { usePricingRules } from "@/shared/hooks/usePricingRules";
-import { useProductList } from "@/shared/hooks/useProductList";
+import { hasValidQuery, useProductList } from "@/shared/hooks/useProductList";
 import { useProductSets } from "@/shared/hooks/useProductSets";
 import { useMemo, useState } from "react";
 import {
@@ -51,56 +51,42 @@ export function useProductSectionData({
     types: "item, image, category, tax, discount, pricing_rule, product_set",
   });
 
-  console.log("params", params.query);
-
   // * custom hook for fetching products - only run when there's a query
-  const { data, isPending, error } = useProductList(
-    params.query ? accessToken : "",
-    params
-  );
+  const {
+    data,
+    isPending: dataIsPending,
+    error,
+  } = useProductList(accessToken, params);
 
-  // * custom hook for fetching discounts - only run when there's a query
-  const { discounts: fetchedDiscounts } = useDiscounts(
-    params.query ? accessToken : ""
-  );
+  // * custom hook for fetching discounts
+  const { discounts: fetchedDiscounts } = useDiscounts(accessToken);
 
-  // * custom hook for fetching pricing rules - only run when there's a query
-  const { pricingRules: fetchedPricingRules } = usePricingRules(
-    params.query ? accessToken : ""
-  );
+  // * custom hook for fetching pricing rules
+  const { pricingRules: fetchedPricingRules } = usePricingRules(accessToken);
 
-  // * custom hook for fetching product sets - only run when there's a query
-  const { productSets: fetchedProductSets } = useProductSets(
-    params.query ? accessToken : ""
-  );
+  // * custom hook for fetching product sets
+  const { productSets: fetchedProductSets } = useProductSets(accessToken);
 
   // * use server-side products if provided, otherwise use client-fetched data
   const productData = useMemo(() => {
     // * if search/filter then use client rendered data
-    if (params.query) {
+    if (hasValidQuery(params?.query)) {
       return data;
     }
     return products;
   }, [data, products, params.query]);
 
-  // * get the items
-  const items = extractItems(productData);
-
-  // * get the taxes and discounts
-  const taxes = extractTaxes(productData);
-
-  // * variation ids are used for fetching inventory counts
-  const variationIds = extractVariationIds(items);
-
-  // * get the categories for use in filter functionality
-  const categories = extractCategories(productData);
-
-  // * get all item IDs
-  const allItemIds = extractItemIds(items);
-
-  // * build image map for quick lookup of image URLs by image id
-  const images = extractImages(productData);
-  const imageMap = buildImageMap(images);
+  // * Memoize data extraction to prevent recalculation on every render
+  const items = useMemo(() => extractItems(productData), [productData]);
+  const taxes = useMemo(() => extractTaxes(productData), [productData]);
+  const variationIds = useMemo(() => extractVariationIds(items), [items]);
+  const categories = useMemo(
+    () => extractCategories(productData),
+    [productData]
+  );
+  const allItemIds = useMemo(() => extractItemIds(items), [items]);
+  const images = useMemo(() => extractImages(productData), [productData]);
+  const imageMap = useMemo(() => buildImageMap(images), [images]);
 
   // * use fetched discounts if available, otherwise fall back to product data
   const discounts =
@@ -119,37 +105,54 @@ export function useProductSectionData({
       ? fetchedProductSets
       : extractProductSets(productData);
 
-  // * convert raw data to a structured data
-  const taxes_data = transformTaxes(taxes);
-  const discounts_data = transformDiscounts(discounts);
-  const pricing_rules_data = transformPricingRules(pricing_rules);
-  const product_sets_data = transformProductSets(product_sets);
-  const categoryObjects = transformCategories(categories); // * save this to a json file
+  // * Memoize data transformations to prevent recalculation
+  const taxes_data = useMemo(() => transformTaxes(taxes), [taxes]);
+  const discounts_data = useMemo(
+    () => transformDiscounts(discounts),
+    [discounts]
+  );
+  const pricing_rules_data = useMemo(
+    () => transformPricingRules(pricing_rules),
+    [pricing_rules]
+  );
+  const product_sets_data = useMemo(
+    () => transformProductSets(product_sets),
+    [product_sets]
+  );
+  const categoryObjects = useMemo(
+    () => transformCategories(categories),
+    [categories]
+  );
 
-  // * maps discount IDs to the product set IDs they apply to
-  const discountToProductSetMap =
-    createDiscountToProductSetMap(pricing_rules_data);
+  // * Memoize discount mappings and applications
+  const discountToProductSetMap = useMemo(
+    () => createDiscountToProductSetMap(pricing_rules_data),
+    [pricing_rules_data]
+  );
 
-  // * apply discount to product ids
-  const discountApplications = createDiscountApplications(
-    discountToProductSetMap,
-    discounts_data,
-    product_sets_data,
-    allItemIds
+  const discountApplications = useMemo(
+    () =>
+      createDiscountApplications(
+        discountToProductSetMap,
+        discounts_data,
+        product_sets_data,
+        allItemIds
+      ),
+    [discountToProductSetMap, discounts_data, product_sets_data, allItemIds]
   );
 
   // console.log(discountApplications);
 
   // * custom hook for fetching inventory
-  const { data: clientInventory } = useInventoryData(
-    variationIds,
-    params.query ? accessToken : ""
-  );
+  // const { data: clientInventory } = useInventoryData(
+  //   variationIds,
+  //   accessToken
+  // );
   // * use server-side inventory if provided, otherwise use client-fetched data
-  const inventoryData = inventory || clientInventory;
+  const inventoryData = inventory;
 
   // * build a map from variation id to inventory info, for quick lookup
-  const inventoryMap = buildInventoryMap(inventoryData);
+  const inventoryMap = buildInventoryMap(inventoryData ?? { counts: [] });
 
   // * builds a map from item id to { state, quantity }, used in cart drawer
   const cartInventoryInfo = buildCartInventoryInfo(items, inventoryMap);
@@ -157,7 +160,7 @@ export function useProductSectionData({
   return {
     params,
     setParams,
-    isPending,
+    dataIsPending,
     error,
     items,
     taxes_data,

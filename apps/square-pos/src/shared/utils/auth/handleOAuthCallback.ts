@@ -28,6 +28,7 @@ const handleOAuthCallback = async ({
         setError(`Session creation failed: ${result.error}`);
       } else {
         // Redirect to dashboard or home
+        console.log("Redirecting to dashboard");
         window.location.href = "/dashboard";
       }
     } else {
@@ -41,6 +42,7 @@ const handleOAuthCallback = async ({
       }`
     );
   } finally {
+    console.log("Setting isProcessing to false");
     setIsProcessing(false);
   }
 };

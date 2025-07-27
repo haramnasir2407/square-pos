@@ -5,33 +5,39 @@
 
 import type { paramsType } from "../types/catalog";
 
-export async function fetchProducts(accessToken: string, params?: paramsType) {
+export async function fetchProducts(accessToken: string | undefined, params?: paramsType) {
   if (!accessToken) {
     return null;
   }
 
   if (params) {
-    const query = (
-      params as { query?: { set_query?: unknown; text_query?: unknown } }
-    ).query;
+    const query = params.query as {
+      set_query?: { attribute_values: string[]; attribute_name: string };
+      text_query?: { keywords: string[] };
+    };
     const setQuery = query?.set_query; // * for filter by category
     const textQuery = query?.text_query; // * for search by keyword
 
     let queryObj = undefined;
 
-    if (setQuery && textQuery) {
+    if (
+      setQuery &&
+      textQuery &&
+      setQuery.attribute_values.length > 0 &&
+      textQuery.keywords.length > 0
+    ) {
       // * combine both queries
       queryObj = {
         set_query: setQuery,
         text_query: textQuery,
       };
-    } else if (setQuery) {
+    } else if (setQuery && setQuery.attribute_values.length > 0) {
       queryObj = { set_query: setQuery };
-    } else if (textQuery) {
+    } else if (textQuery && textQuery.keywords.length > 0) {
       queryObj = { text_query: textQuery };
     }
 
-    const types = (params as { types?: string }).types;
+    const types = params.types;
     const body = {
       object_types: types
         ? types.split(",").map((t: string) => t.trim().toUpperCase())

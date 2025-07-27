@@ -11,6 +11,7 @@ export function useSignInPageLogic() {
   const processedCodes = useRef<Set<string>>(new Set());
 
   useEffect(() => {
+    console.log("searchParams", searchParams);
     const code = searchParams.get("code");
     const error = searchParams.get("error");
 

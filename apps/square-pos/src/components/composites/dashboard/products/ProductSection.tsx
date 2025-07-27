@@ -7,8 +7,9 @@ import { css } from "~/styled-system/css";
 import CartDrawer from "../cart/CartDrawer";
 
 import FilterButton from "../filter/FilterButton";
-import ProductCard from "./ProductCard";
 import SearchBar from "../search/SearchBar";
+import ProductCard from "./ProductCard";
+import { hasValidQuery } from "@/shared/hooks/useProductList";
 
 /**
  * Props for the ProductSection component.
@@ -31,7 +32,7 @@ export default function ProductSection({
   const {
     params,
     setParams,
-    isPending,
+    dataIsPending,
     error,
     items,
     taxes_data,
@@ -71,9 +72,9 @@ export default function ProductSection({
           prevParams={params}
         />
       </div>
-      {isPending && !products && <DashboardLoader />}
+      {hasValidQuery(params.query) && dataIsPending && <DashboardLoader />}
       {Boolean(error) && <div>Error loading products</div>}
-      {!isPending && !error && items.length === 0 && (
+      {!dataIsPending && !error && items.length === 0 && (
         <div style={{ textAlign: "center", margin: "2rem 0", color: "#888" }}>
           No items found
         </div>

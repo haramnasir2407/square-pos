@@ -3,13 +3,13 @@
 import DashboardHeader from "@/components/composites/dashboard/header/DashboardHeader";
 import ProductSection from "@/components/composites/dashboard/products/ProductSection";
 
+import ProductSectionSkeleton from "@/components/composites/dashboard/products/ProductSectionSkeleton";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { auth } from "~/auth";
 import { css } from "~/styled-system/css";
 import { center, container, stack } from "~/styled-system/patterns";
 import { useDashboardData } from "./useDashboardData";
-import ProductSectionSkeleton from "@/components/composites/dashboard/products/ProductSectionSkeleton";
 
 /**
  * DashboardContainer is an async server component that handles all data fetching
@@ -61,7 +61,8 @@ export default async function DashboardContainer() {
               </div>
 
               {/* Product Section */}
-              <Suspense fallback={<ProductSectionSkeleton/>}>
+              {/*  dynamic content on run time  */}
+              <Suspense fallback={<ProductSectionSkeleton />}>
                 <ProductSection
                   accessToken={session.accessToken ?? ""}
                   products={products}

@@ -1,5 +1,3 @@
-// can i make this a server action?
-
 export const startSquareOAuth = () => {
   const clientId = process.env.NEXT_PUBLIC_SQUARE_CLIENT_ID ?? "";
   const redirectUri = `${process.env.NEXT_PUBLIC_SQUARE_REDIRECT_URI}`;

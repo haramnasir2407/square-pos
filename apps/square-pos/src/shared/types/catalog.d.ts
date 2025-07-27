@@ -42,7 +42,7 @@ export type UseProductSectionDataProps = {
 export type UseProductSectionDataReturn = {
   params: paramsType;
   setParams: React.Dispatch<React.SetStateAction<paramsType>>;
-  isPending: boolean;
+  dataIsPending: boolean;
   error: Error | null;
   items: Item[];
   taxes_data: TransformedTax[];
@@ -104,17 +104,15 @@ export interface UsePricingRulesReturn {
 // * params
 export interface paramsType {
   types: string;
-  query?:
-    | string
-    | {
-        set_query?: {
-          attribute_values: string[];
-          attribute_name: string;
-        };
-        text_query?: {
-          keywords: string[];
-        };
-      };
+  query?: {
+    set_query?: {
+      attribute_values: string[];
+      attribute_name: string;
+    };
+    text_query?: {
+      keywords: string[];
+    };
+  };
 }
 
 // * Catalog object
