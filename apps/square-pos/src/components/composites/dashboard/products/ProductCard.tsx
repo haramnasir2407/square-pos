@@ -1,12 +1,8 @@
 "use client";
-import { useContext } from "react";
-
-import Image from "next/image";
-import { CartContext } from "@/shared/context/CartContext";
-import { css } from "~/styled-system/css";
 import { Paragraph } from "@/components/primitives/ui/typography";
-import { Button } from "@/components/primitives/ui/button";
-import { paragraph } from "~/styled-system/recipes";
+import { useCartStore } from "@/shared/store/useCartStore";
+import Image from "next/image";
+import { css } from "~/styled-system/css";
 
 /**
  * Props for the ProductCard component.
@@ -43,10 +39,14 @@ export default function ProductCard({
   discounts,
   taxes,
 }: ProductCardProps) {
-  const { cart, addToCart, removeFromCart, updateQuantity } =
-    useContext(CartContext);
-  // * retrieves the cart item from the cart object using the id
-  const cartItem = cart[id];
+  // Use zustand store instead of CartContext
+  const items = useCartStore((state) => state.items);
+  const addItem = useCartStore((state) => state.addItem);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+
+  // Find the cart item by id (zustand uses array)
+  const cartItem = items.find((item) => item.id === id);
 
   /**
    * The available inventory quantity for the product.
@@ -183,7 +183,7 @@ export default function ProductCard({
             <button
               type="button"
               className={css({ ml: "2", color: "red.500", fontSize: "sm" })}
-              onClick={() => removeFromCart(id)}
+              onClick={() => removeItem(id)}
             >
               Remove
             </button>
@@ -206,11 +206,12 @@ export default function ProductCard({
               cursor: isOutOfStock ? "not-allowed" : undefined,
             })}
             onClick={() =>
-              addToCart({
+              addItem({
                 id,
                 name,
                 price,
                 imageUrl,
+                quantity: 1,
                 is_taxable: false,
                 variantId,
                 discounts,

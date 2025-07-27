@@ -1,12 +1,11 @@
 "use client";
 
-import { useContext, useState } from "react";
-import { MdOutlineAddShoppingCart } from "react-icons/md";
 import {
-  CartContext,
   type CartItem,
-  TaxRate,
-} from "../../../../shared/context/CartContext";
+  useCartStore,
+} from "@/shared/store/useCartStore";
+import { useState } from "react";
+import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { OrderSummary } from "../order/OrderSummary";
 
 import CustomSelect from "@/components/primitives/derived/CustomSelect";
@@ -64,19 +63,16 @@ export default function CartDrawer({
   accessToken,
   cartInventoryInfo,
 }: CartDrawerProps) {
-  const {
-    cart,
-    updateQuantity,
-    removeFromCart,
-    toggleItemTax,
-    getOrderSummary,
-    clearCart,
-    applyItemDiscount,
-    removeItemDiscount,
-    setItemTaxRate,
-  } = useContext(CartContext);
-
-  const items = Object.values(cart); // * returns an array of all items present in cart at the moment
+  // Use zustand store instead of CartContext
+  const items = useCartStore((state) => state.items);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const toggleItemTax = useCartStore((state) => state.toggleItemTax);
+  const getOrderSummary = useCartStore((state) => state.getOrderSummary);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const applyItemDiscount = useCartStore((state) => state.applyItemDiscount);
+  const removeItemDiscount = useCartStore((state) => state.removeItemDiscount);
+  const setItemTaxRate = useCartStore((state) => state.setItemTaxRate);
 
   const [open, setOpen] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -332,7 +328,7 @@ export default function CartDrawer({
                       discounts={discounts}
                       taxes={taxes}
                       onQtyChange={(qty) => updateQuantity(item.id, qty)}
-                      onRemove={() => removeFromCart(item.id)}
+                      onRemove={() => removeItem(item.id)}
                       onDiscountToggle={(checked) =>
                         handleDiscountToggle(item, checked)
                       }

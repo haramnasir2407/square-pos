@@ -1,6 +1,4 @@
-import type { CartItem } from "@/shared/context/CartContext";
-import type { Discount } from "@/shared/context/CartContext";
-import type { Tax } from "@/shared/types/catalog";
+import type { CartItem } from "@/shared/store/useCartStore";
 import type {
   OrderDiscount,
   OrderResult,
@@ -86,7 +84,7 @@ export const OrderConfirmation = ({
     };
 
     createOrder();
-  }, [items, accessToken]);
+  }, [items, accessToken, orderDiscounts, orderTaxes]);
 
   // * retrieving order data from the orders api response
   // console.log(orderResult);

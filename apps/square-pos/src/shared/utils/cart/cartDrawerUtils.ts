@@ -1,6 +1,6 @@
 // * Utility functions for CartDrawer
 
-import type { CartItem } from "@/shared/context/CartContext";
+import type { CartItem } from "@/shared/store/useCartStore";
 import type { OrderDiscount, OrderTax } from "@/shared/types/order";
 
 /**

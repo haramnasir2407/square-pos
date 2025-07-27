@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 export type Discount = {
   discount_name: string;
@@ -49,139 +48,133 @@ export type OrderSummary = {
 };
 
 export const useCartStore = create(
-  persist<CartState>(
-    (set, get) => ({
-      items: [],
-      addItem: (item) => {
-        set((state) => {
-          const existing = state.items.find((i) => i.id === item.id);
-          if (existing) {
-            // If item exists, update quantity and merge properties
-            return {
-              items: state.items.map((i) =>
-                i.id === item.id
-                  ? {
-                      ...i,
-                      ...item,
-                      quantity: i.quantity + (item.quantity || 1),
-                    }
-                  : i
-              ),
-            };
-          }
-          return { items: [...state.items, item] };
-        });
-      },
-      removeItem: (id) =>
-        set((state) => ({
-          items: state.items.filter((item) => item.id !== id),
-        })),
-      updateQuantity: (id, quantity) =>
-        set((state) => {
-          const item = state.items.find((i) => i.id === id);
-          if (!item) return state;
-          if (quantity <= 0) {
-            return { items: state.items.filter((i) => i.id !== id) };
-          }
+  (
+    set: (fn: (state: CartState) => Partial<CartState>) => void,
+    get: () => CartState
+  ) => ({
+    items: [],
+    addItem: (item: CartItem) => {
+      set((state: CartState) => {
+        const existing = state.items.find((i: CartItem) => i.id === item.id);
+        if (existing) {
+          // If item exists, update quantity and merge properties
           return {
-            items: state.items.map((i) =>
-              i.id === id ? { ...i, quantity } : i
+            items: state.items.map((i: CartItem) =>
+              i.id === item.id
+                ? {
+                    ...i,
+                    ...item,
+                    quantity: i.quantity + (item.quantity || 1),
+                  }
+                : i
             ),
           };
-        }),
-      getOrderSummary: () => {
-        const items = get().items;
-        let subtotal = 0;
-        let discountAmount = 0;
-        let taxAmount = 0;
-        const appliedDiscounts: Discount[] = [];
-        const appliedTaxRates: TaxRate[] = [];
-
-        for (const item of items) {
-          const itemPrice = item.price ?? 0;
-          const itemSubtotal = itemPrice * item.quantity;
-          let itemDiscountValue = 0;
-          let itemTaxValue = 0;
-
-          // Apply discount if present
-          if (item.itemDiscount) {
-            appliedDiscounts.push(item.itemDiscount);
-            itemDiscountValue = calculateItemDiscountValue(item, itemSubtotal);
-          }
-          const discountedSubtotal = itemSubtotal - itemDiscountValue;
-          discountAmount += itemDiscountValue;
-
-          // Apply tax if present and enabled
-          if (item.is_taxable && item.itemTaxRate !== undefined) {
-            appliedTaxRates.push({
-              name:
-                item.taxes?.find(
-                  (t) => Number(t.percentage) === item.itemTaxRate
-                )?.name || "Tax",
-              percentage: item.itemTaxRate,
-            });
-            itemTaxValue = (discountedSubtotal * item.itemTaxRate) / 100;
-          }
-          taxAmount += itemTaxValue;
-          subtotal += discountedSubtotal;
         }
-        const total = subtotal + taxAmount;
+        return { items: [...state.items, item] };
+      });
+    },
+    removeItem: (id: string) =>
+      set((state: CartState) => ({
+        items: state.items.filter((item: CartItem) => item.id !== id),
+      })),
+    updateQuantity: (id: string, quantity: number) =>
+      set((state: CartState) => {
+        const item = state.items.find((i: CartItem) => i.id === id);
+        if (!item) return state;
+        if (quantity <= 0) {
+          return { items: state.items.filter((i: CartItem) => i.id !== id) };
+        }
         return {
-          subtotal,
-          discountAmount,
-          taxAmount,
-          total,
-          appliedDiscounts,
-          appliedTaxRates,
+          items: state.items.map((i: CartItem) =>
+            i.id === id ? { ...i, quantity } : i
+          ),
         };
-      },
-      clearCart: () => set({ items: [] }),
-      applyItemDiscount: (itemId: string, discount: Discount) =>
-        set((state) => ({
-          items: state.items.map((item) =>
-            item.id === itemId ? { ...item, itemDiscount: discount } : item
-          ),
-        })),
-      removeItemDiscount: (itemId: string) =>
-        set((state) => ({
-          items: state.items.map((item) => {
-            if (item.id === itemId) {
-              const { itemDiscount, ...rest } = item;
-              return rest;
-            }
-            return item;
-          }),
-        })),
-      toggleItemTax: (itemId: string, enabled: boolean) =>
-        set((state) => ({
-          items: state.items.map((item) =>
-            item.id === itemId ? { ...item, is_taxable: enabled } : item
-          ),
-        })),
-      setItemTaxRate: (itemId: string, taxRate: TaxRate) =>
-        set((state) => ({
-          items: state.items.map((item) =>
-            item.id === itemId
-              ? {
-                  ...item,
-                  itemTaxRate:
-                    typeof taxRate.percentage === "number"
-                      ? taxRate.percentage
-                      : taxRate.percentage
-                        ? Number(taxRate.percentage)
-                        : undefined,
-                }
-              : item
-          ),
-        })),
-    }),
-    {
-      name: "cart-storage", // name of the item in storage
-      // getStorage: () => localStorage // use localStorage or sessionStorage for persistence
-      // Optionally, customize storage (default is localStorage)
-      // storage: createJSONStorage(() => sessionStorage),
-    }
-  )
+      }),
+    getOrderSummary: () => {
+      const items = get().items;
+      let subtotal = 0;
+      let discountAmount = 0;
+      let taxAmount = 0;
+      const appliedDiscounts: Discount[] = [];
+      const appliedTaxRates: TaxRate[] = [];
+
+      for (const item of items) {
+        const itemPrice = item.price ?? 0;
+        const itemSubtotal = itemPrice * item.quantity;
+        let itemDiscountValue = 0;
+        let itemTaxValue = 0;
+
+        // Apply discount if present
+        if (item.itemDiscount) {
+          appliedDiscounts.push(item.itemDiscount);
+          itemDiscountValue = calculateItemDiscountValue(item, itemSubtotal);
+        }
+        const discountedSubtotal = itemSubtotal - itemDiscountValue;
+        discountAmount += itemDiscountValue;
+
+        // Apply tax if present and enabled
+        if (item.is_taxable && item.itemTaxRate !== undefined) {
+          appliedTaxRates.push({
+            name:
+              item.taxes?.find((t) => Number(t.percentage) === item.itemTaxRate)
+                ?.name || "Tax",
+            percentage: item.itemTaxRate,
+          });
+          itemTaxValue = (discountedSubtotal * item.itemTaxRate) / 100;
+        }
+        taxAmount += itemTaxValue;
+        subtotal += discountedSubtotal;
+      }
+      const total = subtotal + taxAmount;
+      return {
+        subtotal,
+        discountAmount,
+        taxAmount,
+        total,
+        appliedDiscounts,
+        appliedTaxRates,
+      };
+    },
+    clearCart: () => set(() => ({ items: [] })),
+    applyItemDiscount: (itemId: string, discount: Discount) =>
+      set((state: CartState) => ({
+        items: state.items.map((item: CartItem) =>
+          item.id === itemId ? { ...item, itemDiscount: discount } : item
+        ),
+      })),
+    removeItemDiscount: (itemId: string) =>
+      set((state: CartState) => ({
+        items: state.items.map((item: CartItem) => {
+          if (item.id === itemId) {
+            const { itemDiscount, ...rest } = item;
+            return rest;
+          }
+          return item;
+        }),
+      })),
+    toggleItemTax: (itemId: string, enabled: boolean) =>
+      set((state: CartState) => ({
+        items: state.items.map((item: CartItem) =>
+          item.id === itemId ? { ...item, is_taxable: enabled } : item
+        ),
+      })),
+    setItemTaxRate: (itemId: string, taxRate: TaxRate) =>
+      set((state: CartState) => ({
+        items: state.items.map((item: CartItem) =>
+          item.id === itemId
+            ? {
+                ...item,
+                itemTaxRate:
+                  typeof taxRate.percentage === "number"
+                    ? taxRate.percentage
+                    : taxRate.percentage
+                      ? Number(taxRate.percentage)
+                      : undefined,
+              }
+            : item
+        ),
+      })),
+  })
 );
 
 // Helper for discount calculation

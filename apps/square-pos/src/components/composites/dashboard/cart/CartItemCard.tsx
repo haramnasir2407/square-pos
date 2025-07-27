@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import CustomSelect from "@/components/primitives/derived/CustomSelect";
 import { css } from "~/styled-system/css";
-import type { CartItem, Discount, TaxRate } from "@/shared/context/CartContext";
+import type { CartItem, Discount, TaxRate } from "@/shared/store/useCartStore";
 
 /**
  * Props for CartItemCard
@@ -179,7 +179,6 @@ export default function CartItemCard({
               })}
             >
               <label
-                htmlFor="tax"
                 className={css({
                   fontSize: "xs",
                   display: "flex",
@@ -188,7 +187,6 @@ export default function CartItemCard({
                 })}
               >
                 <input
-                  id="tax"
                   className={css({ mr: "1" })}
                   type="checkbox"
                   checked={!!item.is_taxable && item.itemTaxRate !== undefined}
@@ -223,7 +221,6 @@ export default function CartItemCard({
               })}
             >
               <label
-                htmlFor="discount"
                 className={css({
                   fontSize: "xs",
                   display: "flex",
@@ -232,7 +229,6 @@ export default function CartItemCard({
                 })}
               >
                 <input
-                  id="discount"
                   className={css({ mr: "1" })}
                   type="checkbox"
                   checked={!!item.itemDiscount}

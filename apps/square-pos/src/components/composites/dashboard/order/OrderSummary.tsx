@@ -2,7 +2,7 @@ import {
   ORDER_LEVEL_DISCOUNTS,
   ORDER_LEVEL_TAXES,
 } from "@/shared/constants/order_discounts_taxes";
-import type { CartItem } from "@/shared/context/CartContext";
+import type { CartItem } from "@/shared/store/useCartStore";
 import type { OrderPreview } from "@/shared/types/order";
 import { calculateOrderData } from "@/shared/utils/cart/cartDrawerUtils";
 import { useEffect, useState } from "react";
