@@ -8,25 +8,6 @@ import CustomSelect from "@/components/primitives/derived/CustomSelect";
 import { css } from "~/styled-system/css";
 import type { CartItem, Discount, TaxRate } from "@/shared/store/useCartStore";
 
-/**
- * Props for CartItemCard
- */
-type CartItemCardProps = {
-  item: CartItem;
-  inventory: { state: string; quantity: string };
-  atMaxQty: boolean;
-  selectedDiscount: Discount;
-  selectedTax: TaxRate;
-  discounts: Discount[];
-  taxes: TaxRate[];
-  onQtyChange: (qty: number) => void;
-  onRemove: () => void;
-  onDiscountToggle: (checked: boolean) => void;
-  onDiscountSelect: (discount: Discount) => void;
-  onTaxToggle: (checked: boolean) => void;
-  onTaxSelect: (value: string) => void;
-};
-
 export default function CartItemCard({
   item,
   inventory,

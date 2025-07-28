@@ -10,21 +10,6 @@ import {
 import type { CategoryObject } from "@/shared/types/catalog";
 
 /**
- * Props for the FilterDrawer component.
- * @property {boolean} open - Whether the drawer is open.
- * @property {() => void} onClose - Function to close the drawer.
- * @property {(selectedCategories: CategoryObj[]) => void} onApply - Function to apply selected categories.
- * @property {CategoryObj[]} categoryObjects - List of available category objects.
- */
-
-interface FilterDrawerProps {
-  open: boolean;
-  onClose: () => void;
-  onApply: (selectedCategories: CategoryObject[]) => void;
-  categoryObjects: CategoryObject[];
-}
-
-/**
  * Drawer component for filtering items by category.
  * Allows users to select categories, apply or clear filters.
  */

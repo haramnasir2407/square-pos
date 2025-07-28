@@ -15,6 +15,25 @@ export type OrderTax = {
   uid: string;
 };
 
+/**
+ * Props for the OrderSummary component.
+ * @property items - Array of cart items to summarize
+ * @property accessToken - Auth token for API requests
+ * @property onGoBack - Callback to return to previous view
+ * @property clearCart - Callback to clear the cart after order
+ * @property setShowCheckout - Controls checkout modal visibility
+ * @property setOpen - Controls drawer open/close state
+ */
+
+type OrderSummaryProps = {
+  items: CartItem[];
+  accessToken: string;
+  onGoBack: () => void;
+  clearCart: () => void;
+  setShowCheckout: (open: boolean) => void;
+  setOpen: (open: boolean) => void;
+};
+
 export type OrderResult = {
   order: {
     id?: string;

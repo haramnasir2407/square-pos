@@ -2,35 +2,6 @@ import type { CartItem } from "../context/CartContext";
 import { buildCartInventoryInfo } from "../utils/inventory/inventoryUtils";
 
 /**
- * Props for the  cart drawer component
- */
-export type CartDrawerProps = {
-  accessToken?: string;
-  cartInventoryInfo: Record<string, InventoryObject>;
-  itemVariationIds: string[];
-};
-
-/**
- * Props for the order confirmation component
- */
-export type OrderConfirmationProps = {
-  items: CartItem[];
-  accessToken: string;
-  orderDiscounts?: OrderDiscount[];
-  orderTaxes?: OrderTax[];
-  onClose: () => void;
-};
-
-export type OrderSummaryProps = {
-  items: CartItem[];
-  accessToken: string;
-  onGoBack: () => void;
-  clearCart: () => void;
-  setShowCheckout: (open: boolean) => void;
-  setOpen: (open: boolean) => void;
-};
-
-/**
  * Props for the Product Section hook
  */
 export type UseProductSectionDataProps = {

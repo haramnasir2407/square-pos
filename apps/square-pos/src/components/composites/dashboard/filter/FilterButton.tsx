@@ -6,17 +6,8 @@ import { FaFilter } from "react-icons/fa";
 import { css } from "~/styled-system/css";
 import FilterDrawer from "./FilterDrawer";
 
-import type { CategoryObject, paramsType } from "@/shared/types/catalog";
+import type { CategoryObject } from "@/shared/types/catalog";
 import { buildCategoryFilterParams } from "@/shared/utils/filter/filterUtils";
-import { Button } from "@/components/primitives/ui/button";
-
-/**
- * Props for the FilterButton component.
- */
-type FilterButtonProps = {
-  setParams: (params: paramsType) => void;
-  prevParams: paramsType;
-};
 
 /**
  * Button component to open the filter drawer and apply category filters.

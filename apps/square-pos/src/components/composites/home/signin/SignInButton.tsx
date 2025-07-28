@@ -16,17 +16,8 @@ export default function SignInButton() {
         fontWeight: "600",
         _hover: {
           background: "linear-gradient(to right, #1d4ed8, #4338ca)",
-          transform: "scale(1.02)",
-          boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+          transform: "scale(1)",
         },
-        _focus: {
-          outline: "none",
-          ring: "2px",
-          ringColor: "#3b82f6",
-          ringOffset: "2px",
-        },
-        transition: "all 0.2s",
-        transform: "scale(1)",
         boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
       })}
     >

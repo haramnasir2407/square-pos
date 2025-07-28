@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import type { paramsType } from "@/shared/types/catalog";
 import { css } from "~/styled-system/css";
+import Form from "@/components/primitives/ui/form";
+import { Input } from "@/components/primitives/ui/input";
+import { useForm } from "react-hook-form";
 
 /**
  * Props for the SearchBar component.
@@ -48,45 +50,70 @@ export default function SearchBar({ setParams, prevParams }: SearchBarProps) {
           text_query: undefined,
         },
       });
-      // setSearchInput('');
+      setSearchInput("");
     }
   }, [debouncedSearch]);
 
+  const form = useForm();
+
   return (
-    <form
-      onSubmit={(e) => e.preventDefault()}
-      className={css({
-        display: "flex",
-        alignItems: "center",
-        gap: "2",
-        w: "full",
-        maxW: "md",
-        mx: "auto",
-        mb: "6",
-      })}
-    >
-      <input
-        id="search-bar"
-        type="text"
-        value={searchInput}
-        onChange={(event) => setSearchInput(event.target.value)}
-        placeholder="Search products..."
-        className={css({
-          flex: 1,
-          px: "4",
-          py: "2",
-          border: "1px solid",
-          borderColor: "gray.300",
-          borderRadius: "md",
-          fontSize: "md",
-          outline: "none",
-          _focus: {
-            borderColor: "gray.800",
-            boxShadow: "0 0 0 1px rgb(61, 62, 62)",
-          },
-          transition: "border-color 0.2s, box-shadow 0.2s",
-        })}
-      />
-    </form>
+    // * pallas ui form and input components
+    <Form.Provider form={form} onSubmit={(e) => e.preventDefault()}>
+      <Form.Item>
+        <Form.Control>
+          <Input>
+            <Input.Text
+              className={css({
+                px: "4",
+                py: "2",
+                border: "1px solid",
+                borderColor: "gray.300",
+                borderRadius: "md",
+                fontSize: "md",
+              })}
+              placeholder="Search products..."
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+            />
+          </Input>
+        </Form.Control>
+      </Form.Item>
+    </Form.Provider>
+
+    // <form
+    //   onSubmit={(e) => e.preventDefault()}
+    //   className={css({
+    //     display: "flex",
+    //     alignItems: "center",
+    //     gap: "2",
+    //     w: "full",
+    //     maxW: "md",
+    //     mx: "auto",
+    //     mb: "6",
+    //   })}
+    // >
+    //   <input
+    //     id="search-bar"
+    //     type="text"
+    //     value={searchInput}
+    //     onChange={(event) => setSearchInput(event.target.value)}
+    //     placeholder="Search products..."
+    //     className={css({
+    //       flex: 1,
+    //       px: "4",
+    //       py: "2",
+    //       border: "1px solid",
+    //       borderColor: "gray.300",
+    //       borderRadius: "md",
+    //       fontSize: "md",
+    //       outline: "none",
+    //       _focus: {
+    //         borderColor: "gray.800",
+    //         boxShadow: "0 0 0 1px rgb(61, 62, 62)",
+    //       },
+    //       transition: "border-color 0.2s, box-shadow 0.2s",
+    //     })}
+    //   />
+    // </form>
   );
 }

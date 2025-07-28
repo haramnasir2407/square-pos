@@ -1,59 +1,25 @@
 "use client";
 
-import {
-  type CartItem,
-  useCartStore,
-} from "@/shared/store/useCartStore";
-import { useState } from "react";
-import { MdOutlineAddShoppingCart } from "react-icons/md";
-import { OrderSummary } from "../order/OrderSummary";
-
 import CustomSelect from "@/components/primitives/derived/CustomSelect";
 import {
   ORDER_LEVEL_DISCOUNTS,
   ORDER_LEVEL_TAXES,
 } from "@/shared/constants/order_discounts_taxes";
+import { type CartItem, useCartStore } from "@/shared/store/useCartStore";
+import {
+  getDrawerOrderSummary,
+  handleDiscountSelect,
+  handleDiscountToggle,
+  handleItemLevelChange,
+  handleOrderLevelChange,
+  handleTaxSelect,
+  handleTaxToggle,
+} from "@/shared/utils/cart/cartDrawerUtils";
+import { useState } from "react";
+import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { css, cx } from "~/styled-system/css";
+import { OrderSummary } from "../order/OrderSummary";
 import CartItemCard from "./CartItemCard";
-
-/**
- * Props for the CartDrawer component.
- * @property {string} [accessToken] - Optional access token for API calls.
- * @property {Record<string, { state: string; quantity: string }>} cartInventoryInfo - Inventory info for cart items.
- * @property {TaxRate[]} taxes_data - List of available tax rates.
- * @property {string[]} itemVariationIds - List of item variation IDs.
- */
-type CartDrawerProps = {
-  accessToken?: string;
-  cartInventoryInfo: Record<string, { state: string; quantity: string }>;
-  itemVariationIds: string[];
-};
-
-/**
- * Represents the selected tax state for an item.
- * @property {number} [itemTaxRate] - Selected tax rate for the item.
- * @property {boolean} [enabled] - Whether tax is enabled for the item.
- */
-
-type SelectedDiscount = {
-  discount_name: string;
-  discount_value: string | number | null;
-};
-
-type SelectedTax = {
-  itemTaxRate?: number;
-  enabled?: boolean;
-};
-
-type SelectedOrderDiscount = {
-  name: string;
-  percentage: string;
-};
-
-type SelectedOrderTax = {
-  name: string;
-  percentage: string;
-};
 
 /**
  * Drawer component for displaying and managing the shopping cart.
@@ -100,134 +66,13 @@ export default function CartDrawer({
       item.itemDiscount || (item.is_taxable && item.itemTaxRate !== undefined)
   );
 
-  /**
-   * Handles switching between order-level and item-level discounts/taxes.
-   * Clears item-level discounts/taxes when order-level is selected.
-   * @param {"discount"|"tax"} type - Type of order-level change.
-   * @param {any} value - Selected discount or tax value.
-   */
-  const handleOrderLevelChange = (
-    type: "discount" | "tax",
-    value: SelectedOrderDiscount | SelectedOrderTax | null
-  ) => {
-    if (type === "discount") {
-      setSelectedOrderDiscount(value);
-    } else {
-      setSelectedOrderTax(value);
-    }
-    // clear all item-level discounts/taxes
-    items.forEach((item) => {
-      removeItemDiscount(item.id);
-      toggleItemTax(item.id, false);
-      // Only call setItemTaxRate if item.itemTaxRate is a number
-      if (typeof item.itemTaxRate === "number") {
-        setItemTaxRate(item.id, {
-          name: item.name,
-          percentage: 0,
-        }); // set to 0 to clear
-      }
-    });
-  };
-
-  /**
-   * Clears order-level discount/tax if any item-level discount/tax is selected.
-   */
-  const handleItemLevelChange = () => {
-    setSelectedOrderDiscount(null);
-    setSelectedOrderTax(null);
-  };
-
-  /**
-   * Calculates the order summary for the drawer, considering order-level discounts/taxes if selected.
-   */
-  const getDrawerOrderSummary = () => {
-    if (isOrderLevelActive) {
-      // Uniformly distribute order-level discount/tax
-      const subtotal = items.reduce(
-        (sum, item) => sum + (item.price ?? 0) * item.quantity,
-        0
-      );
-      let discountAmount = 0;
-      let taxAmount = 0;
-      if (selectedOrderDiscount) {
-        const percent = Number.parseFloat(selectedOrderDiscount.percentage);
-        if (!Number.isNaN(percent)) {
-          discountAmount = (subtotal * percent) / 100;
-        }
-      }
-      const discountedSubtotal = subtotal - discountAmount;
-      if (selectedOrderTax) {
-        const percent = Number.parseFloat(selectedOrderTax.percentage);
-        if (!Number.isNaN(percent)) {
-          taxAmount = (discountedSubtotal * percent) / 100;
-        }
-      }
-      const total = discountedSubtotal + taxAmount;
-      return { subtotal, discountAmount, taxAmount, total };
-    }
-    // fallback to context's item-level summary
-    return getOrderSummary();
-  };
-
-  const drawerOrderSummary = getDrawerOrderSummary();
-
-  /**
-   * Handles toggling of item-level discounts.
-   * @param {any} item - The cart item.
-   * @param {boolean} checked - Whether the discount is applied.
-   */
-  const handleDiscountToggle = (item: CartItem, checked: boolean) => {
-    handleItemLevelChange();
-    if (checked && selectedDiscounts[item.id]) {
-      applyItemDiscount(item.id, selectedDiscounts[item.id]);
-    } else {
-      removeItemDiscount(item.id);
-    }
-  };
-
-  /**
-   * Handles selection of a discount for an item.
-   * @param {any} item - The cart item.
-   * @param {any} discount - The selected discount.
-   */
-  const handleDiscountSelect = (item: CartItem, discount: SelectedDiscount) => {
-    setSelectedDiscounts((prev) => ({
-      ...prev,
-      [item.id]: discount,
-    }));
-  };
-
-  /**
-   * Handles toggling of item-level taxes.
-   * @param {any} item - The cart item.
-   * @param {boolean} checked - Whether the tax is applied.
-   */
-  const handleTaxToggle = (item: CartItem, checked: boolean) => {
-    handleItemLevelChange();
-    toggleItemTax(item.id, checked);
-  };
-
-  /**
-   * Handles selection of a tax rate for an item.
-   * @param {any} item - The cart item.
-   * @param {string} value - The selected tax rate value.
-   */
-  const handleTaxSelect = (item: CartItem, value: string) => {
-    const taxRate = value === "" ? undefined : Number.parseFloat(value);
-    setSelectedTaxes((prev) => ({
-      ...prev,
-      [item.id]: {
-        ...prev[item.id],
-        itemTaxRate: taxRate,
-      },
-    }));
-    if (typeof taxRate === "number") {
-      setItemTaxRate(item.id, {
-        name: item.name,
-        percentage: taxRate,
-      });
-    }
-  };
+  const drawerOrderSummary = getDrawerOrderSummary({
+    isOrderLevelActive,
+    items,
+    selectedOrderDiscount,
+    selectedOrderTax,
+    getOrderSummary,
+  });
 
   return (
     <>
@@ -305,7 +150,6 @@ export default function CartDrawer({
               <div className={css({ flex: 1, overflowY: "auto" })}>
                 {items.map((item, idx) => {
                   const inventory = cartInventoryInfo[item.id];
-                  const state = inventory?.state ?? "Unknown";
                   const quantity = inventory?.quantity ?? "-";
                   const discounts = item.discounts || [];
                   const taxes = item.taxes || [];
@@ -330,13 +174,46 @@ export default function CartDrawer({
                       onQtyChange={(qty) => updateQuantity(item.id, qty)}
                       onRemove={() => removeItem(item.id)}
                       onDiscountToggle={(checked) =>
-                        handleDiscountToggle(item, checked)
+                        handleDiscountToggle({
+                          item,
+                          checked,
+                          handleItemLevelChange: () =>
+                            handleItemLevelChange({
+                              setSelectedOrderDiscount,
+                              setSelectedOrderTax,
+                            }),
+                          selectedDiscounts,
+                          applyItemDiscount,
+                          removeItemDiscount,
+                        })
                       }
                       onDiscountSelect={(discount) =>
-                        handleDiscountSelect(item, discount)
+                        handleDiscountSelect({
+                          setSelectedDiscounts,
+                          item,
+                          discount,
+                        })
                       }
-                      onTaxToggle={(checked) => handleTaxToggle(item, checked)}
-                      onTaxSelect={(value) => handleTaxSelect(item, value)}
+                      onTaxToggle={(checked) =>
+                        handleTaxToggle({
+                          item,
+                          checked,
+                          handleItemLevelChange: () =>
+                            handleItemLevelChange({
+                              setSelectedOrderDiscount,
+                              setSelectedOrderTax,
+                            }),
+                          toggleItemTax,
+                        })
+                      }
+                      onTaxSelect={(value) =>
+                        handleTaxSelect({
+                          setSelectedTaxes,
+                          item,
+                          value,
+                          setItemTaxRate,
+                        })
+                      }
                     />
                   );
                 })}
@@ -383,10 +260,16 @@ export default function CartDrawer({
                     const discount =
                       ORDER_LEVEL_DISCOUNTS.find((d) => d.name === value) ||
                       null;
-                    handleOrderLevelChange(
-                      "discount",
-                      discount as SelectedOrderDiscount
-                    );
+                    handleOrderLevelChange({
+                      type: "discount",
+                      value: discount as SelectedOrderDiscount,
+                      setSelectedOrderDiscount,
+                      setSelectedOrderTax,
+                      items,
+                      removeItemDiscount,
+                      toggleItemTax,
+                      setItemTaxRate,
+                    });
                   }}
                   disabled={isItemLevelActive}
                   options={[
@@ -416,7 +299,16 @@ export default function CartDrawer({
                   onChange={(value) => {
                     const tax =
                       ORDER_LEVEL_TAXES.find((t) => t.name === value) || null;
-                    handleOrderLevelChange("tax", tax);
+                    handleOrderLevelChange({
+                      type: "tax",
+                      value: tax,
+                      setSelectedOrderDiscount,
+                      setSelectedOrderTax,
+                      items,
+                      removeItemDiscount,
+                      toggleItemTax,
+                      setItemTaxRate,
+                    });
                   }}
                   disabled={isItemLevelActive}
                   options={[

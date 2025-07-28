@@ -2,6 +2,7 @@
 
 import type { CartItem } from "@/shared/store/useCartStore";
 import type { OrderDiscount, OrderTax } from "@/shared/types/order";
+import type { Dispatch, SetStateAction } from "react";
 
 /**
  * Creates the order data object for submission to the backend API.
@@ -158,4 +159,214 @@ export function handleItemTaxToggleUtil({
 }) {
   // * toggle the taxable status of the item
   toggleItemTax(itemId, is_taxable);
+}
+
+// Utility: Handles switching between order-level and item-level discounts/taxes.
+export function handleOrderLevelChange({
+  type,
+  value,
+  setSelectedOrderDiscount,
+  setSelectedOrderTax,
+  items,
+  removeItemDiscount,
+  toggleItemTax,
+  setItemTaxRate,
+}: {
+  type: "discount" | "tax";
+  value: SelectedOrderDiscount | SelectedOrderTax | null;
+  setSelectedOrderDiscount: Dispatch<
+    SetStateAction<SelectedOrderDiscount | null>
+  >;
+  setSelectedOrderTax: Dispatch<SetStateAction<SelectedOrderTax | null>>;
+  items: CartItem[];
+  removeItemDiscount: (id: string) => void;
+  toggleItemTax: (id: string, enabled: boolean) => void;
+  setItemTaxRate: (
+    id: string,
+    rate: { name: string; percentage: number }
+  ) => void;
+}) {
+  if (type === "discount") {
+    setSelectedOrderDiscount(value as SelectedOrderDiscount | null);
+  } else {
+    setSelectedOrderTax(value as SelectedOrderTax | null);
+  }
+  items.forEach((item) => {
+    removeItemDiscount(item.id);
+    toggleItemTax(item.id, false);
+    if (typeof item.itemTaxRate === "number") {
+      setItemTaxRate(item.id, {
+        name: item.name,
+        percentage: 0,
+      });
+    }
+  });
+}
+
+// Utility: Clears order-level discount/tax if any item-level discount/tax is selected.
+export function handleItemLevelChange({
+  setSelectedOrderDiscount,
+  setSelectedOrderTax,
+}: {
+  setSelectedOrderDiscount: Dispatch<
+    SetStateAction<SelectedOrderDiscount | null>
+  >;
+  setSelectedOrderTax: Dispatch<SetStateAction<SelectedOrderTax | null>>;
+}) {
+  setSelectedOrderDiscount(null);
+  setSelectedOrderTax(null);
+}
+
+// Utility: Calculates the order summary for the drawer, considering order-level discounts/taxes if selected.
+export function getDrawerOrderSummary({
+  isOrderLevelActive,
+  items,
+  selectedOrderDiscount,
+  selectedOrderTax,
+  getOrderSummary,
+}: {
+  isOrderLevelActive: boolean;
+  items: CartItem[];
+  selectedOrderDiscount: SelectedOrderDiscount | null;
+  selectedOrderTax: SelectedOrderTax | null;
+  getOrderSummary: () => {
+    subtotal: number;
+    discountAmount: number;
+    taxAmount: number;
+    total: number;
+  };
+}) {
+  if (isOrderLevelActive) {
+    const subtotal = items.reduce(
+      (sum, item) => sum + (item.price ?? 0) * item.quantity,
+      0
+    );
+    let discountAmount = 0;
+    let taxAmount = 0;
+    if (selectedOrderDiscount) {
+      const percent = Number.parseFloat(selectedOrderDiscount.percentage);
+      if (!Number.isNaN(percent)) {
+        discountAmount = (subtotal * percent) / 100;
+      }
+    }
+    const discountedSubtotal = subtotal - discountAmount;
+    if (selectedOrderTax) {
+      const percent = Number.parseFloat(selectedOrderTax.percentage);
+      if (!Number.isNaN(percent)) {
+        taxAmount = (discountedSubtotal * percent) / 100;
+      }
+    }
+    const total = discountedSubtotal + taxAmount;
+    return { subtotal, discountAmount, taxAmount, total };
+  }
+  return getOrderSummary();
+}
+
+// Utility: Handles toggling of item-level discounts.
+/**
+ * Handles toggling of item-level discounts.
+ * @param {any} item - The cart item.
+ * @param {boolean} checked - Whether the discount is applied.
+ */
+export function handleDiscountToggle({
+  item,
+  checked,
+  handleItemLevelChange,
+  selectedDiscounts,
+  applyItemDiscount,
+  removeItemDiscount,
+}: {
+  item: CartItem;
+  checked: boolean;
+  handleItemLevelChange: () => void;
+  selectedDiscounts: Record<string, SelectedDiscount>;
+  applyItemDiscount: (id: string, discount: SelectedDiscount) => void;
+  removeItemDiscount: (id: string) => void;
+}) {
+  handleItemLevelChange();
+  if (checked && selectedDiscounts[item.id]) {
+    applyItemDiscount(item.id, selectedDiscounts[item.id]);
+  } else {
+    removeItemDiscount(item.id);
+  }
+}
+
+/**
+ * Handles selection of a discount for an item.
+ * @param {any} item - The cart item.
+ * @param {any} discount - The selected discount.
+ */
+// Utility: Handles selection of a discount for an item.
+export function handleDiscountSelect({
+  setSelectedDiscounts,
+  item,
+  discount,
+}: {
+  setSelectedDiscounts: Dispatch<
+    SetStateAction<Record<string, SelectedDiscount>>
+  >;
+  item: CartItem;
+  discount: SelectedDiscount;
+}) {
+  setSelectedDiscounts((prev) => ({
+    ...prev,
+    [item.id]: discount,
+  }));
+}
+
+/**
+ * Handles toggling of item-level taxes.
+ * @param {any} item - The cart item.
+ * @param {boolean} checked - Whether the tax is applied.
+ */
+// Utility: Handles toggling of item-level taxes.
+export function handleTaxToggle({
+  item,
+  checked,
+  handleItemLevelChange,
+  toggleItemTax,
+}: {
+  item: CartItem;
+  checked: boolean;
+  handleItemLevelChange: () => void;
+  toggleItemTax: (id: string, enabled: boolean) => void;
+}) {
+  handleItemLevelChange();
+  toggleItemTax(item.id, checked);
+}
+
+/**
+ * Handles selection of a tax rate for an item.
+ * @param {any} item - The cart item.
+ * @param {string} value - The selected tax rate value.
+ */
+// Utility: Handles selection of a tax rate for an item.
+export function handleTaxSelect({
+  setSelectedTaxes,
+  item,
+  value,
+  setItemTaxRate,
+}: {
+  setSelectedTaxes: Dispatch<SetStateAction<Record<string, SelectedTax>>>;
+  item: CartItem;
+  value: string;
+  setItemTaxRate: (
+    id: string,
+    rate: { name: string; percentage: number }
+  ) => void;
+}) {
+  const taxRate = value === "" ? undefined : Number.parseFloat(value);
+  setSelectedTaxes((prev) => ({
+    ...prev,
+    [item.id]: {
+      ...prev[item.id],
+      itemTaxRate: taxRate,
+    },
+  }));
+  if (typeof taxRate === "number") {
+    setItemTaxRate(item.id, {
+      name: item.name,
+      percentage: taxRate,
+    });
+  }
 }

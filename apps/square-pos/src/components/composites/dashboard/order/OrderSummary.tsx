@@ -2,30 +2,11 @@ import {
   ORDER_LEVEL_DISCOUNTS,
   ORDER_LEVEL_TAXES,
 } from "@/shared/constants/order_discounts_taxes";
-import type { CartItem } from "@/shared/store/useCartStore";
-import type { OrderPreview } from "@/shared/types/order";
+import type { OrderPreview, OrderSummaryProps } from "@/shared/types/order";
 import { calculateOrderData } from "@/shared/utils/cart/cartDrawerUtils";
 import { useEffect, useState } from "react";
 import { css } from "~/styled-system/css/css.mjs";
 import { OrderConfirmation } from "./OrderConfirmation";
-
-/**
- * Props for the OrderSummary component.
- * @property items - Array of cart items to summarize
- * @property accessToken - Auth token for API requests
- * @property onGoBack - Callback to return to previous view
- * @property clearCart - Callback to clear the cart after order
- * @property setShowCheckout - Controls checkout modal visibility
- * @property setOpen - Controls drawer open/close state
- */
-type OrderSummaryProps = {
-  items: CartItem[];
-  accessToken: string;
-  onGoBack: () => void;
-  clearCart: () => void;
-  setShowCheckout: (open: boolean) => void;
-  setOpen: (open: boolean) => void;
-};
 
 /**
  * Displays a summary of the current order, including items, discounts, taxes, and totals.
@@ -99,7 +80,7 @@ export const OrderSummary = ({
   }, [items, accessToken]);
 
   // * retrieving order data from the orders api response
-  console.log(orderPreview);
+  // console.log(orderPreview);
 
   /**
    * Formats a cent value as a dollar string.
@@ -228,17 +209,17 @@ export const OrderSummary = ({
             position: "absolute",
             top: "4",
             left: "4",
-            bg: "gray.200",
+            bg: "gray.100",
             color: "gray.800",
             borderRadius: "md",
             px: "3",
             py: "1",
             fontWeight: "semibold",
-            _hover: { bg: "gray.300" },
+            _hover: { bg: "gray.200" },
             mb: "6",
           })}
         >
-          ← Go Back
+          ← Go back
         </button>
         {/* Order Summary */}
         <div className={css({ textAlign: "left", mb: "6", mt: "6" })}>
