@@ -1,11 +1,10 @@
-import { Button } from "@/components/primitives/ui/button";
 import { startSquareOAuth } from "@/shared/utils/auth/startOAuth";
 import { css } from "~/styled-system/css";
 import { flex } from "~/styled-system/patterns";
 
 export default function SignInButton() {
   return (
-    <Button
+    <button
       type="button"
       onClick={startSquareOAuth}
       className={css({
@@ -48,6 +47,6 @@ export default function SignInButton() {
         </svg>
         <span>Sign in with Square</span>
       </div>
-    </Button>
+    </button>
   );
 }

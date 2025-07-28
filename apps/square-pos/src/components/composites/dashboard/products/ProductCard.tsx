@@ -1,5 +1,4 @@
 "use client";
-import { Paragraph } from "@/components/primitives/ui/typography";
 import { useCartStore } from "@/shared/store/useCartStore";
 import Image from "next/image";
 import { css } from "~/styled-system/css";
@@ -98,11 +97,11 @@ export default function ProductCard({
         {name}
       </h3>
 
-      <Paragraph className={css({ color: "gray.600", fontSize: "sm" })}>
+      <p className={css({ color: "gray.600", fontSize: "sm" })}>
         {price !== null
           ? `$${(price / 100).toFixed(2)}`
           : "Price not available"}{" "}
-      </Paragraph>
+      </p>
 
       <div
         className={css({
