@@ -2,7 +2,6 @@ import {
   ORDER_LEVEL_DISCOUNTS,
   ORDER_LEVEL_TAXES,
 } from "@/shared/constants/order_discounts_taxes";
-import type { OrderPreview, OrderSummaryProps } from "@/shared/types/order";
 import { calculateOrderData } from "@/shared/utils/cart/cartDrawerUtils";
 import { useEffect, useState } from "react";
 import { css } from "~/styled-system/css/css.mjs";
@@ -32,6 +31,7 @@ export const OrderSummary = ({
     setShowConfirmation(true);
   };
 
+  // * client component calling server logic
   useEffect(() => {
     /**
      * Calculates the order preview by calling the backend API.

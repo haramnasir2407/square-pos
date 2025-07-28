@@ -1,7 +1,7 @@
 /**
  * Props for CartItemCard
  */
-type CartItemCardProps = {
+interface CartItemCardProps {
   item: CartItem;
   inventory: { state: string; quantity: string };
   atMaxQty: boolean;
@@ -15,7 +15,7 @@ type CartItemCardProps = {
   onDiscountSelect: (discount: Discount) => void;
   onTaxToggle: (checked: boolean) => void;
   onTaxSelect: (value: string) => void;
-};
+}
 
 /**
  * Props for the CartDrawer component.
@@ -25,11 +25,11 @@ type CartItemCardProps = {
  * @property {string[]} itemVariationIds - List of item variation IDs.
  */
 
-type CartDrawerProps = {
+interface CartDrawerProps {
   accessToken?: string;
   cartInventoryInfo: Record<string, { state: string; quantity: string }>;
   itemVariationIds: string[];
-};
+}
 
 /**
  * Represents the selected tax state for an item.

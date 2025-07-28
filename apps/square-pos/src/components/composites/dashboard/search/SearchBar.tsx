@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useDebounce } from "@/shared/hooks/useDebounce";
-import type { paramsType } from "@/shared/types/catalog";
-import { css } from "~/styled-system/css";
 import Form from "@/components/primitives/ui/form";
 import { Input } from "@/components/primitives/ui/input";
+import { useDebounce } from "@/shared/hooks/useDebounce";
+import type { ParamsType } from "@/shared/types/catalog";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { css } from "~/styled-system/css";
 
 /**
  * Props for the SearchBar component.
  */
 interface SearchBarProps {
-  setParams: (params: paramsType) => void;
-  prevParams: paramsType;
+  setParams: (params: ParamsType) => void;
+  prevParams: ParamsType;
 }
 
 /**

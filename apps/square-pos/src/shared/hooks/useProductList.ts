@@ -2,12 +2,12 @@ import { fetchProducts } from "@/shared/services/productService";
 // this is a hook that fetches products from the Square API
 
 import { useQuery } from "@tanstack/react-query";
-import type { paramsType } from "../types/catalog";
+import type { ParamsType } from "../types/catalog";
 
 /**
  * Check if the query object has meaningful search/filter values
  */
-export function hasValidQuery(query: paramsType["query"]): boolean {
+export function hasValidQuery(query: ParamsType["query"]): boolean {
   if (!query) return false;
   if (typeof query === "string") return (query as string).length > 0;
   if (typeof query === "object" && query !== null) {
@@ -28,10 +28,7 @@ export function hasValidQuery(query: paramsType["query"]): boolean {
  * @param params - The parameters for the query
  * @returns The products
  */
-export function useProductList(
-  access_token: string,
-  params?: paramsType
-) {
+export function useProductList(access_token: string, params?: ParamsType) {
   // * useQuery is used for get requests
   return useQuery({
     queryKey: ["products", params],

@@ -1,10 +1,10 @@
 /**
  * Props for the FilterButton component.
  */
-type FilterButtonProps = {
-  setParams: (params: paramsType) => void;
-  prevParams: paramsType;
-};
+interface FilterButtonProps {
+  setParams: (params: ParamsType) => void;
+  prevParams: ParamsType;
+}
 
 /**
  * Props for the FilterDrawer component.

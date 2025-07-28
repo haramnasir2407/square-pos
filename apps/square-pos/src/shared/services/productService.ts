@@ -3,9 +3,12 @@
 // the params object is an object with the query parameters
 // the function returns the data from the API
 
-import type { paramsType } from "../types/catalog";
+import type { ParamsType } from "../types/catalog";
 
-export async function fetchProducts(accessToken: string | undefined, params?: paramsType) {
+export async function fetchProducts(
+  accessToken: string | undefined,
+  params?: ParamsType
+) {
   if (!accessToken) {
     return null;
   }

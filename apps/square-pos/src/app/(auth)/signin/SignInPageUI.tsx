@@ -6,14 +6,9 @@ import ErrorComponent from "@/components/primitives/derived/ErrorComponent";
 import HomeLoader from "@/components/primitives/derived/HomeLoader";
 import type { Session } from "next-auth";
 import { css } from "../../../../styled-system/css";
+import type { SignInPageUIProps } from "@/shared/types/catalog";
 
-interface SignInPageUIProps {
-  session: Session | null;
-  status: string;
-  isProcessing: boolean;
-  error: string | null;
-  hasOAuthCode: string | null;
-}
+
 
 export default function SignInPageUI({
   session,

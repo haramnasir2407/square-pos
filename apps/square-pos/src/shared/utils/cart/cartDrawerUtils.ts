@@ -370,3 +370,26 @@ export function handleTaxSelect({
     });
   }
 }
+
+export function calculateItemDiscountValue(
+  item: CartItem,
+  itemSubtotal: number
+): number {
+  const value = item.itemDiscount?.discount_value;
+  if (!value) return 0;
+  // Percentage discount
+  if (typeof value === "string" && value.includes("%")) {
+    const percent = Number.parseFloat(value);
+    return !Number.isNaN(percent) ? (itemSubtotal * percent) / 100 : 0;
+  }
+  // Fixed amount discount (number)
+  if (typeof value === "number") {
+    return value * item.quantity;
+  }
+  // Fixed amount discount (string that parses to number)
+  if (typeof value === "string") {
+    const num = Number.parseFloat(value);
+    return !Number.isNaN(num) ? num * item.quantity : 0;
+  }
+  return 0;
+}

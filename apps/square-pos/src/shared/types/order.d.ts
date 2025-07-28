@@ -1,4 +1,4 @@
-export type OrderDiscount = {
+type OrderDiscount = {
   name: string;
   percentage?: string;
   amount?: number;
@@ -7,7 +7,7 @@ export type OrderDiscount = {
   uid: string;
 };
 
-export type OrderTax = {
+type OrderTax = {
   name: string;
   percentage: string;
   scope: "ORDER" | "LINE_ITEM";
@@ -25,16 +25,16 @@ export type OrderTax = {
  * @property setOpen - Controls drawer open/close state
  */
 
-type OrderSummaryProps = {
+interface OrderSummaryProps {
   items: CartItem[];
   accessToken: string;
   onGoBack: () => void;
   clearCart: () => void;
   setShowCheckout: (open: boolean) => void;
   setOpen: (open: boolean) => void;
-};
+}
 
-export type OrderResult = {
+type OrderResult = {
   order: {
     id?: string;
     location_id: string;
@@ -57,7 +57,29 @@ export type OrderResult = {
   };
 };
 
-export type line_item = {
+type OrderPreview = {
+  order: {
+    location_id: string;
+    state: string;
+    discounts: OrderDiscount[];
+    taxes: OrderTax[];
+    line_items: line_item[];
+    total_money: {
+      amount: number;
+      currency: string;
+    };
+    total_tax_money: {
+      amount: number;
+      currency: string;
+    };
+    total_discount_money: {
+      amount: number;
+      currency: string;
+    };
+  };
+};
+
+type line_item = {
   item_type: string;
   uid: string;
   name: string;
@@ -91,26 +113,4 @@ export type line_item = {
       currency: string;
     };
   }[];
-};
-
-export type OrderPreview = {
-  order: {
-    location_id: string;
-    state: string;
-    discounts: OrderDiscount[];
-    taxes: OrderTax[];
-    line_items: line_item[];
-    total_money: {
-      amount: number;
-      currency: string;
-    };
-    total_tax_money: {
-      amount: number;
-      currency: string;
-    };
-    total_discount_money: {
-      amount: number;
-      currency: string;
-    };
-  };
 };

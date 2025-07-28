@@ -11,8 +11,8 @@ export type UseProductSectionDataProps = {
 };
 
 export type UseProductSectionDataReturn = {
-  params: paramsType;
-  setParams: React.Dispatch<React.SetStateAction<paramsType>>;
+  params: ParamsType;
+  setParams: React.Dispatch<React.SetStateAction<ParamsType>>;
   dataIsPending: boolean;
   error: Error | null;
   items: Item[];
@@ -25,6 +25,14 @@ export type UseProductSectionDataReturn = {
   discountApplications: DiscountApplication[];
   catalogObjects: CatalogObject[];
 };
+
+interface SignInPageUIProps {
+  session: Session | null;
+  status: string;
+  isProcessing: boolean;
+  error: string | null;
+  hasOAuthCode: string | null;
+}
 
 /**
  * Props for the ProductCard component
@@ -73,7 +81,7 @@ export interface UsePricingRulesReturn {
 }
 
 // * params
-export interface paramsType {
+export interface ParamsType {
   types: string;
   query?: {
     set_query?: {
@@ -139,6 +147,35 @@ export interface Money {
 
 export interface ItemCategory {
   id: string;
+}
+
+// * inventory
+export interface InventoryObject {
+  state: string;
+  quantity: string;
+  catalog_object_id: string;
+}
+
+export interface InventoryData {
+  counts: InventoryObject[];
+}
+
+export interface InventoryMap {
+  [variationId: string]: InventoryObject;
+}
+
+// * category
+export interface Category extends CatalogObject {
+  id: string;
+  type: "CATEGORY";
+  category_data: {
+    name: string;
+  };
+}
+
+export interface CategoryObject {
+  id: string;
+  name: string;
 }
 
 // * Tax
@@ -220,35 +257,6 @@ export interface TransformedPricingRule {
   id: string;
   discount_id: string;
   match_products_id: string;
-}
-
-// * inventory
-export interface InventoryData {
-  counts: InventoryObject[];
-}
-
-export interface InventoryObject {
-  state: string;
-  quantity: string;
-  catalog_object_id: string;
-}
-
-export interface InventoryMap {
-  [variationId: string]: InventoryObject;
-}
-
-// * category
-export interface Category extends CatalogObject {
-  id: string;
-  type: "CATEGORY";
-  category_data: {
-    name: string;
-  };
-}
-
-export interface CategoryObject {
-  id: string;
-  name: string;
 }
 
 // * ProductSet

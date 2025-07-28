@@ -25,9 +25,9 @@ import {
 } from "../utils/productDataTransformers";
 
 import type {
+  ParamsType,
   UseProductSectionDataProps,
   UseProductSectionDataReturn,
-  paramsType,
 } from "@/shared/types/catalog";
 import { createDiscountApplications } from "@/shared/utils/discount/discountApplicationUtils";
 import { buildImageMap } from "@/shared/utils/image/imageUtils";
@@ -47,7 +47,7 @@ export function useProductSectionData({
   inventory,
 }: UseProductSectionDataProps): UseProductSectionDataReturn {
   // * set params for fetching products
-  const [params, setParams] = useState<paramsType>({
+  const [params, setParams] = useState<ParamsType>({
     types: "item, image, category, tax, discount, pricing_rule, product_set",
   });
 

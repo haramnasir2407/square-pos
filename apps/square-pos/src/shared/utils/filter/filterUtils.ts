@@ -1,4 +1,4 @@
-import type { CategoryObject, paramsType } from "@/shared/types/catalog";
+import type { CategoryObject, ParamsType } from "@/shared/types/catalog";
 
 /**
  * Toggles a category in the selected list
@@ -62,8 +62,8 @@ export const getCategoryNames = (categories: CategoryObject[]): string[] => {
  */
 export function buildCategoryFilterParams(
   selected: CategoryObject[],
-  prevParams: paramsType
-): paramsType {
+  prevParams: ParamsType
+): ParamsType {
   if (selected && selected.length > 0) {
     return {
       ...prevParams,
