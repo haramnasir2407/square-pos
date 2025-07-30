@@ -1,5 +1,4 @@
 import { useDiscounts } from "@/shared/hooks/useDiscounts";
-import { useInventoryData } from "@/shared/hooks/useInventoryData";
 import { usePricingRules } from "@/shared/hooks/usePricingRules";
 import { hasValidQuery, useProductList } from "@/shared/hooks/useProductList";
 import { useProductSets } from "@/shared/hooks/useProductSets";

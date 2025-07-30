@@ -1,9 +1,12 @@
 import "./globals.css";
-
-import { CartContextProvider } from "../shared/context/CartContext";
-import { SessionProviders } from "@/shared/providers/SessionProvider";
 import { QueryProvider } from "@/shared/providers/QueryProvider";
+import { SessionProviders } from "@/shared/providers/SessionProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+export const metadata: Metadata = {
+  title: "Square POS App",
+  description: "A NextJs app for managing you sqaure point-of-scale."
+};
 
 export default function RootLayout({
   children,
@@ -13,13 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CartContextProvider>
-          <SessionProviders>
-            <QueryProvider>
-              {children} <ReactQueryDevtools initialIsOpen={false} />
-            </QueryProvider>
-          </SessionProviders>
-        </CartContextProvider>
+        <SessionProviders>
+          <QueryProvider>
+            {children} <ReactQueryDevtools initialIsOpen={false} />
+          </QueryProvider>
+        </SessionProviders>
       </body>
     </html>
   );

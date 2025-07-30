@@ -25,6 +25,7 @@ export default function SearchBar({ setParams, prevParams }: SearchBarProps) {
   // Debounced search input value
   const debouncedSearch = useDebounce(searchInput, 500);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: suppress dependency prevParams, setParams
   useEffect(() => {
     if (debouncedSearch.length >= 3) {
       setParams({
@@ -79,41 +80,5 @@ export default function SearchBar({ setParams, prevParams }: SearchBarProps) {
         </Form.Control>
       </Form.Item>
     </Form.Provider>
-
-    // <form
-    //   onSubmit={(e) => e.preventDefault()}
-    //   className={css({
-    //     display: "flex",
-    //     alignItems: "center",
-    //     gap: "2",
-    //     w: "full",
-    //     maxW: "md",
-    //     mx: "auto",
-    //     mb: "6",
-    //   })}
-    // >
-    //   <input
-    //     id="search-bar"
-    //     type="text"
-    //     value={searchInput}
-    //     onChange={(event) => setSearchInput(event.target.value)}
-    //     placeholder="Search products..."
-    //     className={css({
-    //       flex: 1,
-    //       px: "4",
-    //       py: "2",
-    //       border: "1px solid",
-    //       borderColor: "gray.300",
-    //       borderRadius: "md",
-    //       fontSize: "md",
-    //       outline: "none",
-    //       _focus: {
-    //         borderColor: "gray.800",
-    //         boxShadow: "0 0 0 1px rgb(61, 62, 62)",
-    //       },
-    //       transition: "border-color 0.2s, box-shadow 0.2s",
-    //     })}
-    //   />
-    // </form>
   );
 }

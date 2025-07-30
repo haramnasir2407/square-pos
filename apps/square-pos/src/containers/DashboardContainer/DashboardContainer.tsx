@@ -2,19 +2,21 @@
 
 import DashboardHeader from "@/components/composites/dashboard/header/DashboardHeader";
 import ProductSection from "@/components/composites/dashboard/products/ProductSection";
-
 import ProductSectionSkeleton from "@/components/composites/dashboard/products/ProductSectionSkeleton";
+import useDashboardData from "./useDashboardData";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { auth } from "~/auth";
 import { css } from "~/styled-system/css";
 import { center, container, stack } from "~/styled-system/patterns";
-import { useDashboardData } from "./useDashboardData";
+import ErrorBoundary from "@/components/composites/common/ErrorBoundary";
 
 /**
  * DashboardContainer is an async server component that handles all data fetching
  * and renders the dashboard UI for authenticated users. Redirects to home if not authenticated.
  */
+
+/* @compile */
 export default async function DashboardContainer() {
   // * Check the session
   const session = await auth();
@@ -62,13 +64,15 @@ export default async function DashboardContainer() {
 
               {/* Product Section */}
               {/*  dynamic content on run time  */}
-              <Suspense fallback={<ProductSectionSkeleton />}>
-                <ProductSection
-                  accessToken={session.accessToken ?? ""}
-                  products={products}
-                  inventory={inventoryData}
-                />
-              </Suspense>
+              <ErrorBoundary>
+                <Suspense fallback={<ProductSectionSkeleton />}>
+                  <ProductSection
+                    accessToken={session.accessToken ?? ""}
+                    products={products}
+                    inventory={inventoryData}
+                  />
+                </Suspense>
+              </ErrorBoundary>
             </div>
           </div>
         </div>

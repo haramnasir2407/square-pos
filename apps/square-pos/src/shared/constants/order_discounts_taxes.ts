@@ -1,5 +1,4 @@
-import type { OrderDiscount, OrderTax } from "../types/order";
-
+import { v4 as uuidv4 } from "uuid";
 
 export const ORDER_LEVEL_DISCOUNTS: OrderDiscount[] = [
   {
@@ -7,6 +6,7 @@ export const ORDER_LEVEL_DISCOUNTS: OrderDiscount[] = [
     name: "10% Off On Entire Order",
     percentage: "10",
     scope: "ORDER",
+    uid: uuidv4(),
   },
 ];
 
@@ -16,5 +16,6 @@ export const ORDER_LEVEL_TAXES: OrderTax[] = [
     name: "Trade Tax On Entire Order",
     percentage: "11",
     scope: "ORDER",
+    uid: uuidv4(),
   },
 ];

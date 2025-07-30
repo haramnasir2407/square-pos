@@ -88,7 +88,7 @@ export default function ProductCard({
           alt={name}
           width={180}
           height={180}
-          // style={{ objectFit: "contain", maxHeight: "100%" }}
+          style={{ objectFit: "cover", maxHeight: "100%" }}
           className={css({ borderRadius: "md" })}
         />
       </div>

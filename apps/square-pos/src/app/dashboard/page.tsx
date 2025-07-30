@@ -1,4 +1,3 @@
-import ErrorBoundary from "@/components/composites/common/ErrorBoundary";
 import { DashboardContainer } from "@/containers/DashboardContainer";
 
 /**
@@ -7,9 +6,5 @@ import { DashboardContainer } from "@/containers/DashboardContainer";
  * Redirects to home if not authenticated.
  */
 export default function DashboardPage() {
-  return (
-    <ErrorBoundary>
-      <DashboardContainer />
-    </ErrorBoundary>
-  );
+  return <DashboardContainer />;
 }

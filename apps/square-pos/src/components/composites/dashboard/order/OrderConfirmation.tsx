@@ -1,9 +1,4 @@
 import type { CartItem } from "@/shared/store/useCartStore";
-import type {
-  OrderDiscount,
-  OrderResult,
-  OrderTax,
-} from "@/shared/types/order";
 import { createOrderData } from "@/shared/utils/cart/cartDrawerUtils";
 import { useEffect, useState } from "react";
 import { css } from "~/styled-system/css/css.mjs";

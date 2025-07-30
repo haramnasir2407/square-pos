@@ -13,7 +13,7 @@ export interface DashboardDataReturn {
   inventoryData: InventoryData;
 }
 
-export async function useDashboardData(session: {
+export default async function useDashboardData(session: {
   accessToken: string;
 }): Promise<DashboardDataReturn> {
   // * Fetch products server side

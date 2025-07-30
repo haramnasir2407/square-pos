@@ -4,11 +4,8 @@ import SignInButton from "@/components/composites/home/signin/SignInButton";
 import SignInText from "@/components/composites/home/signin/SignInText";
 import ErrorComponent from "@/components/primitives/derived/ErrorComponent";
 import HomeLoader from "@/components/primitives/derived/HomeLoader";
-import type { Session } from "next-auth";
-import { css } from "../../../../styled-system/css";
 import type { SignInPageUIProps } from "@/shared/types/catalog";
-
-
+import { css } from "../../../../../styled-system/css";
 
 export default function SignInPageUI({
   session,

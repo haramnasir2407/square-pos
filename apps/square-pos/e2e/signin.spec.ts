@@ -13,34 +13,37 @@ test("Sign in with Square sandbox account via app", async ({ page }) => {
   await page.getByTestId("login-password-input").fill("Haram@carbonteq");
   await page.keyboard.press("Enter");
 
-  // Step 3: Bypass 2FA promotional modals (if shown)
+  // Step 3: Bypass 2FA promotional modals
   const remindMeBtn = page.locator(
-    '[id="2fa-post-login-promo-sms-remind-me-btn"] button:has-text("Remind me next time")'
+    '[id="2fa-post-login-promo-sms-remind-me-btn"]'
   );
   if (await remindMeBtn.isVisible()) {
     await remindMeBtn.click();
   }
 
   const continueBtn = page.locator(
-    '[id="2fa-post-login-promo-opt-out-modal-continue"] button:has-text("Continue to Square")'
+    '[id="2fa-post-login-promo-opt-out-modal-continue"]'
   );
   if (await continueBtn.isVisible()) {
     await continueBtn.click();
   }
 
   // Step 4: Click sandbox test account (opens popup)
-  const table = page.getByTestId("sandbox-test-accounts-table");
-  await expect(table).toBeVisible();
 
-  const accountLink = table.locator("a").first();
-  await expect(accountLink).toBeVisible();
+  await page.waitForSelector('[data-testid="sandbox-test-accounts-table"]', {
+    timeout: 100000,
+  });
 
-  await accountLink.click();
+  await expect(page.getByTestId("sandbox-test-accounts-table")).toContainText(
+    "Default Test Account"
+  );
   const popupPromise = page.waitForEvent("popup");
+  await page.getByTestId("sandbox-test-accounts-table").locator("a").click();
   const popup = await popupPromise;
+  await popup.goto("https://app.squareupsandbox.com/dashboard/");
 
   // Step 5: Complete sign-in on your app
-  await popup.waitForLoadState("domcontentloaded");
+  // await popup.waitForLoadState("domcontentloaded");
   await popup.goto("http://localhost:3000/signin");
   await popup.getByRole("button", { name: /sign in/i }).click();
   await popup.getByRole("button", { name: /allow/i }).click();

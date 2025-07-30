@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import SignInPageUI from "../src/app/(auth)/signin/SignInPageUI";
+import SignInPageUI from "../src/components/composites/home/signin/SignInPageUI";
 
 // Mock child components for isolation
 jest.mock("@/components/composites/home/auth/Authenticated", () => () => (

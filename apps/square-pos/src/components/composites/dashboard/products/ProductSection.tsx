@@ -2,19 +2,14 @@
 
 import DashboardLoader from "@/components/primitives/derived/DashboardLoader";
 import { useProductSectionData } from "@/shared/hooks/useProductSectionData";
-import type {
-  InventoryData,
-  ParamsType,
-  ProductCatalog,
-} from "@/shared/types/catalog";
+import type { InventoryData, ProductCatalog } from "@/shared/types/catalog";
 import { css } from "~/styled-system/css";
 import CartDrawer from "../cart/CartDrawer";
 
+import { hasValidQuery } from "@/shared/hooks/useProductList";
 import FilterButton from "../filter/FilterButton";
 import SearchBar from "../search/SearchBar";
 import ProductCard from "./ProductCard";
-import { hasValidQuery } from "@/shared/hooks/useProductList";
-import { useCallback } from "react";
 
 /**
  * Props for the ProductSection component.
@@ -29,6 +24,8 @@ type ProductSectionProps = {
  * Section component for displaying a grid of products with filtering, search, and cart drawer.
  * Handles data loading, error states, and product mapping.
  */
+
+/* @compile */
 export default function ProductSection({
   accessToken,
   products,
@@ -47,8 +44,6 @@ export default function ProductSection({
     variationIds,
     discountApplications,
   } = useProductSectionData({ accessToken, products, inventory });
-
-
 
   // * Render the main product section layout
   return (
