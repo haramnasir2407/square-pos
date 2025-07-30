@@ -7,18 +7,10 @@
       }
     ],
     "paths": {
-      "content-collections": [
-        "./.content-collections/generated"
-      ],
-      "@/components/*": [
-        "./components/*"
-      ],
-      "@styled-system/*": [
-        "./styled-system/*"
-      ],
-      "@/public/*": [
-        "./public/*"
-      ]
+      "content-collections": ["./.content-collections/generated"],
+      "@/components/*": ["./components/*"],
+      "@styled-system/*": ["./styled-system/*"],
+      "@/public/*": ["./public/*"]
     }
   },
   "include": [
@@ -29,7 +21,5 @@
     ".next/types/**/*.ts",
     "plugins/rehype-component.js"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

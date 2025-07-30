@@ -2,7 +2,7 @@
 import type { AnySelector, Selectors } from './selectors';
 
 export interface Conditions {
-	/** `&:is(:hover, [data-hover])` */
+	/** `@media (hover: hover) and (pointer: fine) &:is(:hover, [data-hover])` */
 	"_hover": string
 	/** `&:is(:focus, [data-focus])` */
 	"_focus": string
@@ -10,7 +10,7 @@ export interface Conditions {
 	"_focusWithin": string
 	/** `&:is(:focus-visible, [data-focus-visible])` */
 	"_focusVisible": string
-	/** `&:is(:disabled, [disabled], [data-disabled])` */
+	/** `&:is([data-disabled])` */
 	"_disabled": string
 	/** `&:is(:active, [data-active])` */
 	"_active": string
@@ -32,6 +32,12 @@ export interface Conditions {
 	"_expanded": string
 	/** `&[data-highlighted]` */
 	"_highlighted": string
+	/** `&:is([data-complete])` */
+	"_complete": string
+	/** `&:is([data-incomplete])` */
+	"_incomplete": string
+	/** `&[data-dragging]` */
+	"_dragging": string
 	/** `&::before` */
 	"_before": string
 	/** `&::after` */
@@ -100,21 +106,21 @@ export interface Conditions {
 	"_groupChecked": string
 	/** `.group:is([aria-expanded=true], [data-expanded], [data-state="expanded"]) &` */
 	"_groupExpanded": string
-	/** `.group:invalid &` */
+	/** `.group:is(:invalid, [data-invalid]) &` */
 	"_groupInvalid": string
-	/** `&:is(:indeterminate, [data-indeterminate], [aria-checked=mixed], [data-state="indeterminate"])` */
+	/** `&:is(:indeterminate, [data-indeterminate], [aria-checked=mixed], [data-state=indeterminate])` */
 	"_indeterminate": string
 	/** `&:is(:required, [data-required], [aria-required=true])` */
 	"_required": string
 	/** `&:is(:valid, [data-valid])` */
 	"_valid": string
-	/** `&:is(:invalid, [data-invalid])` */
+	/** `&:is([aria-invalid])` */
 	"_invalid": string
 	/** `&:autofill` */
 	"_autofill": string
-	/** `&:in-range` */
+	/** `&:is(:in-range, [data-in-range])` */
 	"_inRange": string
-	/** `&:out-of-range` */
+	/** `&:is(:out-of-range, [data-outside-range])` */
 	"_outOfRange": string
 	/** `&::placeholder, &[data-placeholder]` */
 	"_placeholder": string
@@ -124,22 +130,46 @@ export interface Conditions {
 	"_pressed": string
 	/** `&:is([aria-selected=true], [data-selected])` */
 	"_selected": string
+	/** `&:is([aria-grabbed=true], [data-grabbed])` */
+	"_grabbed": string
+	/** `&:is([data-state="under-value"])` */
+	"_underValue": string
+	/** `&[data-state=over-value]` */
+	"_overValue": string
+	/** `&[data-state=at-value]` */
+	"_atValue": string
 	/** `&:default` */
 	"_default": string
 	/** `&:optional` */
 	"_optional": string
-	/** `&:is([open], [data-open], [data-state="open"])` */
+	/** `&[data-state=open]` */
 	"_open": string
-	/** `&:is([closed], [data-closed], [data-state="closed"])` */
+	/** `&[data-state=closed]` */
 	"_closed": string
-	/** `&:fullscreen` */
+	/** `&:is(:fullscreen, [data-fullscreen])` */
 	"_fullscreen": string
-	/** `&:is([data-loading], [aria-busy=true])` */
+	/** `&:is([data-loading])` */
 	"_loading": string
+	/** `&:is([hidden])` */
+	"_hidden": string
+	/** `&:is([data-current])` */
+	"_current": string
 	/** `&[aria-current=page]` */
 	"_currentPage": string
 	/** `&[aria-current=step]` */
 	"_currentStep": string
+	/** `&:is([data-today])` */
+	"_today": string
+	/** `&[data-unavailable]` */
+	"_unavailable": string
+	/** `&[data-range-start]` */
+	"_rangeStart": string
+	/** `&[data-range-end]` */
+	"_rangeEnd": string
+	/** `&[data-now]` */
+	"_now": string
+	/** `&[data-topmost]` */
+	"_topmost": string
 	/** `@media (prefers-reduced-motion: reduce)` */
 	"_motionReduce": string
 	/** `@media (prefers-reduced-motion: no-preference)` */
@@ -152,7 +182,7 @@ export interface Conditions {
 	"_portrait": string
 	/** `.dark &` */
 	"_dark": string
-	/** `.light &` */
+	/** `:root &, .light &` */
 	"_light": string
 	/** `@media (prefers-color-scheme: dark)` */
 	"_osDark": string
@@ -178,8 +208,52 @@ export interface Conditions {
 	"_horizontal": string
 	/** `&[data-orientation=vertical]` */
 	"_vertical": string
+	/** `& :where(svg)` */
+	"_icon": string
 	/** `@starting-style` */
 	"_starting": string
+	/** `&:is([aria-collapsed=true], [data-collapsed], [data-state="collapsed"])` */
+	"_collapsed": string
+	/** `&:is([data-state="off"])` */
+	"_off": string
+	/** `&:is([data-state="on"])` */
+	"_on": string
+	/** `&[data-side=top]` */
+	"_top": string
+	/** `&[data-side=bottom]` */
+	"_bottom": string
+	/** `&[data-side=left]` */
+	"_left": string
+	/** `&[data-side=right]` */
+	"_right": string
+	/** `&:is([data-active=true])` */
+	"_activeTrue": string
+	/** `&:has(input:hover:not(:disabled))` */
+	"_inputHover": string
+	/** `&:has(input:focus:not(:disabled))` */
+	"_inputFocus": string
+	/** `&:has(input:disabled)` */
+	"_inputDisabled": string
+	/** `&:has(input[data-status=success])` */
+	"_inputSuccess": string
+	/** `&:has(input[data-status=success]:hover:not(:disabled))` */
+	"_inputSuccessHover": string
+	/** `&:has(input[data-status=success]:focus:not(:disabled))` */
+	"_inputSuccessFocus": string
+	/** `&:has(input[data-status=error])` */
+	"_inputError": string
+	/** `&:has(input[data-status=error]:hover:not(:disabled))` */
+	"_inputErrorHover": string
+	/** `&:has(input[data-status=error]:focus:not(:disabled))` */
+	"_inputErrorFocus": string
+	/** `&:has(input[data-status=warning])` */
+	"_inputWarning": string
+	/** `&:has(input[data-status=warning]:hover:not(:disabled))` */
+	"_inputWarningHover": string
+	/** `&:has(input[data-status=warning]:focus:not(:disabled))` */
+	"_inputWarningFocus": string
+	/** `&[data-field-state=error]` */
+	"_errorState": string
 	/** `@media screen and (min-width: 40rem)` */
 	"sm": string
 	/** `@media screen and (min-width: 40rem) and (max-width: 47.9975rem)` */
@@ -230,30 +304,6 @@ export interface Conditions {
 	"lgTo2xl": string
 	/** `@media screen and (min-width: 80rem) and (max-width: 95.9975rem)` */
 	"xlTo2xl": string
-	/** `@container  (min-width: 20rem)` */
-	"@/xs": string
-	/** `@container  (min-width: 24rem)` */
-	"@/sm": string
-	/** `@container  (min-width: 28rem)` */
-	"@/md": string
-	/** `@container  (min-width: 32rem)` */
-	"@/lg": string
-	/** `@container  (min-width: 36rem)` */
-	"@/xl": string
-	/** `@container  (min-width: 42rem)` */
-	"@/2xl": string
-	/** `@container  (min-width: 48rem)` */
-	"@/3xl": string
-	/** `@container  (min-width: 56rem)` */
-	"@/4xl": string
-	/** `@container  (min-width: 64rem)` */
-	"@/5xl": string
-	/** `@container  (min-width: 72rem)` */
-	"@/6xl": string
-	/** `@container  (min-width: 80rem)` */
-	"@/7xl": string
-	/** `@container  (min-width: 90rem)` */
-	"@/8xl": string
 	/** The base (=no conditions) styles to apply  */
 	"base": string
 }

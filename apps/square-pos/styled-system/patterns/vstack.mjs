@@ -3,10 +3,10 @@ import { css } from '../css/index.mjs';
 
 const vstackConfig = {
 transform(props) {
-  const { justify, gap, ...rest } = props;
+  const { justify, gap, align, ...rest } = props;
   return {
     display: "flex",
-    alignItems: "center",
+    alignItems: align,
     justifyContent: justify,
     gap,
     flexDirection: "column",

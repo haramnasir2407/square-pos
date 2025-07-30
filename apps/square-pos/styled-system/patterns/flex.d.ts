@@ -6,15 +6,40 @@ import type { DistributiveOmit } from '../types/system-types';
 import type { Tokens } from '../tokens/index';
 
 export interface FlexProperties {
-   align?: SystemProperties["alignItems"]
+   p?: SystemProperties["padding"]
+	px?: SystemProperties["paddingInline"]
+	py?: SystemProperties["paddingBlock"]
+	pt?: SystemProperties["paddingTop"]
+	pr?: SystemProperties["paddingRight"]
+	pb?: SystemProperties["paddingBottom"]
+	pl?: SystemProperties["paddingLeft"]
+	m?: SystemProperties["margin"]
+	mx?: SystemProperties["marginInline"]
+	my?: SystemProperties["marginBlock"]
+	mt?: SystemProperties["marginTop"]
+	mr?: SystemProperties["marginRight"]
+	mb?: SystemProperties["marginBottom"]
+	ml?: SystemProperties["marginLeft"]
+	w?: SystemProperties["width"]
+	minW?: SystemProperties["minWidth"]
+	maxW?: SystemProperties["maxWidth"]
+	h?: SystemProperties["height"]
+	minH?: SystemProperties["minHeight"]
+	maxH?: SystemProperties["maxHeight"]
+	position?: SystemProperties["position"]
+	bg?: SystemProperties["backgroundColor"]
+	align?: SystemProperties["alignItems"]
 	justify?: SystemProperties["justifyContent"]
 	direction?: SystemProperties["flexDirection"]
 	wrap?: SystemProperties["flexWrap"]
 	basis?: SystemProperties["flexBasis"]
 	grow?: SystemProperties["flexGrow"]
 	shrink?: SystemProperties["flexShrink"]
+	gap?: SystemProperties["gap"]
+	gapX?: SystemProperties["columnGap"]
+	gapY?: SystemProperties["rowGap"]
+	flex?: SystemProperties["flex"]
 }
-
 
 interface FlexStyles extends FlexProperties, DistributiveOmit<SystemStyleObject, keyof FlexProperties > {}
 

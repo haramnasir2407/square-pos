@@ -1,4 +1,5 @@
 {
+  "extends": "@pallas-ui/typescript-config/nextjs.json",
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -18,14 +19,22 @@
         "name": "next"
       }
     ],
-    "baseUrl": "./",
     "paths": {
+      "content-collections": ["./.content-collections/generated"],
+      "@pallas-ui/components": ["../../packages/pallas-ui/components"],
       "@/*": ["./src/*"],
       "~/*": ["./*"],
       "@/components/*": ["./src/components/*"],
       "@styled-system/*": ["./styled-system/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next.config.mjs",
+    "plugins/rehype-component.js"
+  ],
   "exclude": ["node_modules"]
 }

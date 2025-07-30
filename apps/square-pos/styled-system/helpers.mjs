@@ -64,11 +64,14 @@ var memo = (fn) => {
 };
 
 // src/merge-props.ts
+var MERGE_OMIT = /* @__PURE__ */ new Set(["__proto__", "constructor", "prototype"]);
 function mergeProps(...sources) {
   return sources.reduce((prev, obj) => {
     if (!obj)
       return prev;
     Object.keys(obj).forEach((key) => {
+      if (MERGE_OMIT.has(key))
+        return;
       const prevValue = prev[key];
       const value = obj[key];
       if (isObject(prevValue) && isObject(value)) {
@@ -313,6 +316,18 @@ export {
 
 
 
+// src/normalize-html.ts
+var htmlProps = ["htmlSize", "htmlTranslate", "htmlWidth", "htmlHeight"];
+function convert(key) {
+  return htmlProps.includes(key) ? key.replace("html", "").toLowerCase() : key;
+}
+function normalizeHTMLProps(props) {
+  return Object.fromEntries(Object.entries(props).map(([key, value]) => [convert(key), value]));
+}
+normalizeHTMLProps.keys = htmlProps;
+export {
+  normalizeHTMLProps
+};
 
 
 export function __spreadValues(a, b) {

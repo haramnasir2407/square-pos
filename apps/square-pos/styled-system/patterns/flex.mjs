@@ -3,7 +3,7 @@ import { css } from '../css/index.mjs';
 
 const flexConfig = {
 transform(props) {
-  const { direction, align, justify, wrap: wrap2, basis, grow, shrink, ...rest } = props;
+  const { direction, align, justify, wrap: wrap2, basis, grow, shrink, gapX, gapY, ...rest } = props;
   return {
     display: "flex",
     flexDirection: direction,
@@ -13,6 +13,8 @@ transform(props) {
     flexBasis: basis,
     flexGrow: grow,
     flexShrink: shrink,
+    columnGap: gapX,
+    rowGap: gapY,
     ...rest
   };
 }}

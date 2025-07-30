@@ -6,14 +6,35 @@ import type { DistributiveOmit } from '../types/system-types';
 import type { Tokens } from '../tokens/index';
 
 export interface GridItemProperties {
-   colSpan?: ConditionalValue<number>
+   p?: SystemProperties["padding"]
+	px?: SystemProperties["paddingInline"]
+	py?: SystemProperties["paddingBlock"]
+	pt?: SystemProperties["paddingTop"]
+	pr?: SystemProperties["paddingRight"]
+	pb?: SystemProperties["paddingBottom"]
+	pl?: SystemProperties["paddingLeft"]
+	m?: SystemProperties["margin"]
+	mx?: SystemProperties["marginInline"]
+	my?: SystemProperties["marginBlock"]
+	mt?: SystemProperties["marginTop"]
+	mr?: SystemProperties["marginRight"]
+	mb?: SystemProperties["marginBottom"]
+	ml?: SystemProperties["marginLeft"]
+	w?: SystemProperties["width"]
+	minW?: SystemProperties["minWidth"]
+	maxW?: SystemProperties["maxWidth"]
+	h?: SystemProperties["height"]
+	minH?: SystemProperties["minHeight"]
+	maxH?: SystemProperties["maxHeight"]
+	position?: SystemProperties["position"]
+	bg?: SystemProperties["backgroundColor"]
+	colSpan?: ConditionalValue<number>
 	rowSpan?: ConditionalValue<number>
 	colStart?: ConditionalValue<number>
 	rowStart?: ConditionalValue<number>
 	colEnd?: ConditionalValue<number>
 	rowEnd?: ConditionalValue<number>
 }
-
 
 interface GridItemStyles extends GridItemProperties, DistributiveOmit<SystemStyleObject, keyof GridItemProperties > {}
 
