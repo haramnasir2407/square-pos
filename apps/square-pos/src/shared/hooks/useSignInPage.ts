@@ -1,7 +1,7 @@
 import handleOAuthCallback from "@/shared/utils/auth/handleOAuthCallback"; // default imports help to import single export
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react" // names imports help to import multiple exports
+import { useEffect, useRef, useState } from "react"; // names imports help to import multiple exports
 
 export default function useSignInPageLogic() {
   const { data: session, status } = useSession();

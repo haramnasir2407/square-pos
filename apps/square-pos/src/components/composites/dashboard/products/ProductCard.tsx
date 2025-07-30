@@ -1,27 +1,8 @@
 "use client";
 import { useCartStore } from "@/shared/store/useCartStore";
+import type { ProductCardProps } from "@/shared/types/catalog";
 import Image from "next/image";
 import { css } from "~/styled-system/css";
-
-/**
- * Props for the ProductCard component.
- */
-interface ProductCardProps {
-  id: string;
-  name: string;
-  price: number | null;
-  imageUrl: string;
-  state?: string;
-  quantity?: string | number;
-  is_taxable?: boolean | undefined;
-  itemTaxRate?: number;
-  variantId?: string;
-  discounts?: Array<{
-    discount_name: string;
-    discount_value: string | number | null;
-  }>;
-  taxes?: Array<{ name: string; percentage: string | number | null }>;
-}
 
 /**
  * Card component for displaying product information and cart controls.
@@ -34,7 +15,7 @@ export default function ProductCard({
   imageUrl,
   state,
   quantity,
-  variantId,
+  variationId,
   discounts,
   taxes,
 }: ProductCardProps) {
@@ -212,7 +193,7 @@ export default function ProductCard({
                 imageUrl,
                 quantity: 1,
                 is_taxable: false,
-                variantId,
+                variationId,
                 discounts,
                 taxes,
               })

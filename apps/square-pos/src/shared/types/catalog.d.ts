@@ -2,9 +2,37 @@ import type { CartItem } from "../context/CartContext";
 import { buildCartInventoryInfo } from "../utils/inventory/inventoryUtils";
 
 /**
+ * Props for the ProductCard component.
+ */
+interface ProductCardProps {
+  id: string;
+  name: string;
+  price: number | null;
+  imageUrl: string;
+  state?: string;
+  quantity?: string | number;
+  is_taxable?: boolean | undefined;
+  itemTaxRate?: number;
+  variationId?: string;
+  discounts?: Array<{
+    discount_name: string;
+    discount_value: string | number | null;
+  }>;
+  taxes?: Array<{ name: string; percentage: string | number | null }>;
+}
+/**
  * Props for the Product Section hook
  */
 export type UseProductSectionDataProps = {
+  accessToken: string;
+  products?: ProductCatalog;
+  inventory?: InventoryData;
+};
+
+/**
+ * Props for the ProductSection component.
+ */
+export type ProductSectionProps = {
   accessToken: string;
   products?: ProductCatalog;
   inventory?: InventoryData;

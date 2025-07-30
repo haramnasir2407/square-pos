@@ -5,8 +5,8 @@ import { useState } from "react";
 import Image from "next/image";
 
 import CustomSelect from "@/components/primitives/derived/CustomSelect";
+import type { Discount } from "@/shared/store/useCartStore";
 import { css } from "~/styled-system/css";
-import type { CartItem, Discount, TaxRate } from "@/shared/store/useCartStore";
 
 export default function CartItemCard({
   item,

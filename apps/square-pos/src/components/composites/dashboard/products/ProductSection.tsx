@@ -2,7 +2,7 @@
 
 import DashboardLoader from "@/components/primitives/derived/DashboardLoader";
 import { useProductSectionData } from "@/shared/hooks/useProductSectionData";
-import type { InventoryData, ProductCatalog } from "@/shared/types/catalog";
+import type { ProductSectionProps } from "@/shared/types/catalog";
 import { css } from "~/styled-system/css";
 import CartDrawer from "../cart/CartDrawer";
 
@@ -10,15 +10,6 @@ import { hasValidQuery } from "@/shared/hooks/useProductList";
 import FilterButton from "../filter/FilterButton";
 import SearchBar from "../search/SearchBar";
 import ProductCard from "./ProductCard";
-
-/**
- * Props for the ProductSection component.
- */
-type ProductSectionProps = {
-  accessToken: string;
-  products?: ProductCatalog;
-  inventory?: InventoryData;
-};
 
 /**
  * Section component for displaying a grid of products with filtering, search, and cart drawer.
@@ -144,7 +135,7 @@ export default function ProductSection({
                 state={state}
                 quantity={quantity}
                 is_taxable={is_taxable}
-                variantId={variationId}
+                variationId={variationId}
                 discounts={discounts}
                 taxes={matchedTaxes.filter(
                   (tax): tax is { name: string; percentage: string | number } =>

@@ -5,7 +5,7 @@ import {
   ORDER_LEVEL_DISCOUNTS,
   ORDER_LEVEL_TAXES,
 } from "@/shared/constants/order_discounts_taxes";
-import { type CartItem, useCartStore } from "@/shared/store/useCartStore";
+import { useCartStore } from "@/shared/store/useCartStore";
 import {
   getDrawerOrderSummary,
   handleDiscountSelect,

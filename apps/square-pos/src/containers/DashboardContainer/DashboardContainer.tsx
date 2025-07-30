@@ -1,7 +1,6 @@
 // * this container contains the business logic and the UI
 
 import DashboardHeader from "@/components/composites/dashboard/header/DashboardHeader";
-import ProductSection from "@/components/composites/dashboard/products/ProductSection";
 import ProductSectionSkeleton from "@/components/composites/dashboard/products/ProductSectionSkeleton";
 import useDashboardData from "./useDashboardData";
 import { redirect } from "next/navigation";
@@ -10,6 +9,8 @@ import { auth } from "~/auth";
 import { css } from "~/styled-system/css";
 import { center, container, stack } from "~/styled-system/patterns";
 import ErrorBoundary from "@/components/composites/common/ErrorBoundary";
+import ProductSection from "@/components/composites/dashboard/products/ProductSection";
+
 
 /**
  * DashboardContainer is an async server component that handles all data fetching

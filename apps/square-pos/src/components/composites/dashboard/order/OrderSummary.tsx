@@ -20,7 +20,7 @@ export const OrderSummary = ({
   setOpen,
 }: OrderSummaryProps) => {
   const [orderPreview, setOrderPreview] = useState<OrderPreview | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -39,7 +39,7 @@ export const OrderSummary = ({
      */
     const calculateOrder = async () => {
       try {
-        setIsLoading(true);
+        // setIsLoading(true);
         setError(null);
 
         // * calculate order

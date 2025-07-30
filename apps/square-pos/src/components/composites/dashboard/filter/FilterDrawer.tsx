@@ -1,15 +1,15 @@
 "use client";
 
+import type { CategoryObject } from "@/shared/types/catalog";
+import {
+  clearSelectedCategories,
+  isCategorySelected,
+  toggleCategory,
+} from "@/shared/utils/filter/filterUtils";
 import { useState } from "react";
 import { css } from "~/styled-system/css";
-import {
-  toggleCategory,
-  isCategorySelected,
-  clearSelectedCategories,
-} from "@/shared/utils/filter/filterUtils";
-import type { CategoryObject } from "@/shared/types/catalog";
 
-/**
+/**v
  * Drawer component for filtering items by category.
  * Allows users to select categories, apply or clear filters.
  */

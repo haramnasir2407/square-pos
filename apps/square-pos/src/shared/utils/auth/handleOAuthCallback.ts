@@ -9,6 +9,7 @@ const handleOAuthCallback = async ({
 
     const response = await fetch(`/api/auth/square/callback?code=${code}`);
     const data = await response.json();
+    console.log("data:", data);
 
     if (data.success) {
       console.log("OAuth successful, creating session...");

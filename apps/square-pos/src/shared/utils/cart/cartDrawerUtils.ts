@@ -1,7 +1,6 @@
 // * Utility functions for CartDrawer
 
 import type { CartItem } from "@/shared/store/useCartStore";
-import type { OrderDiscount, OrderTax } from "@/shared/types/order";
 import type { Dispatch, SetStateAction } from "react";
 
 /**
@@ -23,7 +22,7 @@ export function createOrderData({
   // * create line items for the order using variantId from cart items
   const line_items = items
     .map((item) => {
-      const variationId = item.variantId;
+      const variationId = item.variationId;
       if (!variationId) {
         console.warn(`No variation ID found for item ${item.id}`);
         return null;
@@ -66,7 +65,7 @@ export function createOrderData({
     order.taxes = taxes;
   }
 
-  console.log(order);
+  // console.log(order);
 
   return {
     idempotency_key,
@@ -93,7 +92,7 @@ export function calculateOrderData({
   // * create line items for the order using variantId from cart items
   const line_items = items
     .map((item) => {
-      const variationId = item.variantId;
+      const variationId = item.variationId;
       if (!variationId) {
         console.warn(`No variation ID found for item ${item.id}`);
         return null;

@@ -21,7 +21,7 @@ export type CartItem = {
   itemTaxRate?: number;
   category?: string;
   itemDiscount?: Discount;
-  variantId?: string;
+  variationId?: string;
   discounts?: Discount[];
   taxes?: TaxRate[];
 };
